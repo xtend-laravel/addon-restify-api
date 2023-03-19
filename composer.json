@@ -3,6 +3,16 @@
     "description": "Setup Restify API for Lunar",
     "type": "xtend-addon",
     "license": "MIT",
+    "require": {
+        "php": "^8.1",
+        "binaryk/laravel-restify": "dev-custom-namespace-support"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/adam-code-labx/laravel-restify.git"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "XtendLunar\\Addons\\RestifyApi\\": "src/"
@@ -21,6 +31,5 @@
             ]
         }
     },
-    "minimum-stability": "dev",
-    "require": {}
+    "minimum-stability": "dev"
 }
