@@ -1,0 +1,26 @@
+{
+    "name": "xtend-laravel/addon-restify-api",
+    "description": "Setup Restify API for Lunar",
+    "type": "xtend-addon",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "XtendLunar\\Addons\\RestifyApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Lee",
+            "email": "adam@codelabx.ltd"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "XtendLunar\\Addons\\RestifyApi\\RestifyApiProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}
