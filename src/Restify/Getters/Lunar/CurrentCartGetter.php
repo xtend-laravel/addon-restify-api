@@ -42,6 +42,7 @@ class CurrentCartGetter extends Getter
                     'tax_total' => $cart->taxTotal->value,
                     'total' => $cart->total->value,
                 ],
+                'meta' => $cart->meta,
             ],
         ]);
     }
