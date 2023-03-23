@@ -5,6 +5,8 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Illuminate\Http\JsonResponse;
+use Lunar\Facades\ShippingManifest;
+use Xtend\Extensions\Lunar\Core\Models\Cart;
 
 class CheckoutGetter extends Getter
 {
@@ -12,6 +14,11 @@ class CheckoutGetter extends Getter
 
     public function handle(GetterRequest $request): JsonResponse
     {
+        // @todo fetch cart from session
+        $cart = Cart::first();
+
+        $shippingOptions = ShippingManifest::getOptions($cart);
+
         return data([
             'addresses' => [
               [
@@ -125,32 +132,7 @@ class CheckoutGetter extends Getter
                 'zip_code' => '31002',
               ],
             ],
-            'shipping_methods' => [
-                [
-                    'id' => 'standard',
-                    'name' => 'Standard',
-                    'description' => 'Standard shipping',
-                    'price' => 0,
-                ],
-                [
-                    'id' => 'express',
-                    'name' => 'Express',
-                    'description' => 'Express shipping',
-                    'price' => 5,
-                ],
-            ],
-            'payment_methods' => [
-                [
-                    'id' => 'paypal',
-                    'name' => 'PayPal',
-                    'description' => 'PayPal is the safer, easier way to pay online.',
-                ],
-                [
-                    'id' => 'payzen',
-                    'name' => 'PayZen',
-                    'description' => 'PayZen is the safer, easier way to pay online.',
-                ],
-            ],
+            'shipping_methods' => $shippingOptions,
         ]);
     }
 }
