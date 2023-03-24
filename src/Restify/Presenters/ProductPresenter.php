@@ -24,7 +24,7 @@ class ProductPresenter extends PresenterResource implements Presentable
                 'element_id' => $this->data['primary_category_id'],
                 'element_type' => Collection::class,
             ])->slug ?? '--',
-            //'description' => $this->data['attribute_data']['description'],
+            'description' => $this->data['attribute_data']['description'],
             'status' => $this->data['status'] ?? '--',
             'images' => $this->getter($request, 'product-images'),
             'prices' => $this->getter($request, 'product-prices'),
