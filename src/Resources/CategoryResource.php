@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'active' => (bool)($this->legacy_data['active'] ?? false),
+            'active' => (bool)($this->legacy_data['active'] ?? true),
             'name' => $this->attribute_data['name'] ?? null,
             'count' => DB::table('lunar_collection_product')->where('collection_id', $this->id)->count(),
             'children' => CategoryResource::collection($this->children),
