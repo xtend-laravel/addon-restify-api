@@ -2,12 +2,12 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
-use App\Http\Resources\CategoryResource;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
+use XtendLunar\Addons\RestifyApi\Resources\CategoryResource;
 
 class CategoriesTreeGetter extends Getter
 {
@@ -17,8 +17,7 @@ class CategoriesTreeGetter extends Getter
     {
         $resource = $model
             ? CategoryResource::make($model)
-            : CategoryResource::collection(Collection::all()->toTree(1)
-            );
+            : CategoryResource::collection(Collection::all());
         return response()->json([
             'data' => $resource,
         ]);
