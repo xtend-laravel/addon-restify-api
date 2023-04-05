@@ -63,6 +63,13 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
         $this->registerPolicies();
     }
 
+    protected function gate(): void
+    {
+        Gate::define('viewRestify', function ($user = null) {
+            return true;
+        });
+    }
+
     protected function registerPolicies()
     {
         foreach ($this->policies as $model => $policy) {
