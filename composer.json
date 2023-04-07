@@ -5,14 +5,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
-        "binaryk/laravel-restify": "dev-custom-namespace-support"
+        "binaryk/laravel-restify": "8.x-dev"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/adam-code-labx/laravel-restify.git"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "XtendLunar\\Addons\\RestifyApi\\": "src/"
