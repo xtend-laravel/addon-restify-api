@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use XtendLunar\Addons\RestifyApi\Resources\CategoryResource;
 use XtendLunar\Addons\RestifyApi\Restify\BrandRepository;
 use XtendLunar\Addons\RestifyApi\Restify\CategoryRepository;
+use XtendLunar\Addons\RestifyApi\Restify\CollectionRepository;
 use XtendLunar\Addons\RestifyApi\Restify\Repository;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
@@ -20,7 +21,7 @@ class FilterGroupsGetter extends Getter
 
     public function handle(RestifyRequest $request, BaseModel|Repository $model = null): JsonResponse
     {
-        if ($model instanceof CategoryRepository) {
+        if ($model instanceof CategoryRepository || $model instanceof CollectionRepository) {
             $model = $model->model();
         }
 
