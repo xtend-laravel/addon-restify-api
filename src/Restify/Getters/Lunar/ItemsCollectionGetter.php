@@ -31,6 +31,7 @@ class ItemsCollectionGetter extends Getter
         return response()->json([
             'data' => $collection
                 ->products()
+                ->where('status', 'published')
                 ->limit($widgetParams['limit'])
                 ->get()
                 ->collect()
