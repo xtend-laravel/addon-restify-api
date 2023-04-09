@@ -11,6 +11,7 @@ use Xtend\Extensions\Lunar\Core\Models\Collection;
 
 class CategoryRepository extends Repository
 {
+    // @todo Create Category model extending Collection query categories group
     public static string $model = Collection::class;
 
     public static string $presenter = CategoryPresenter::class;
