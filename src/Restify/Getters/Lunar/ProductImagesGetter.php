@@ -20,9 +20,10 @@ class ProductImagesGetter extends Getter
         // @todo optimise to load relationship faster
         $productId = $repository->model()->product_id ?? $repository->model()->id;
         $product = Product::find($productId);
+        // @todo optimise images size later
         return response()->json([
-            'thumbnail' => $product->thumbnail?->getUrl('small') ?? null,
-            'gallery' => $product->images->map(fn ($image) => $image->getUrl('medium')),
+            'thumbnail' => $product->thumbnail?->getUrl() ?? null,
+            'gallery' => $product->images->map(fn ($image) => $image->getUrl()),
         ]);
     }
 }
