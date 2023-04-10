@@ -8,6 +8,10 @@ trait InteractsWithDefaultFields
 {
     public static array $excludeFields = [];
 
+    public static array $translatableFields = [
+        'attribute_data',
+    ];
+
     public function fields(RestifyRequest $request): array
     {
         return $this->getDefaultFields(
@@ -37,14 +41,26 @@ trait InteractsWithDefaultFields
 
     protected function getDefaultFields(array $exclude = []): array
     {
-        return collect($this->model()->getAttributes())
+        return collect($this->model()->toArray())
             ->filter(fn($attribute, $field) => !in_array($field, $exclude))
             ->mapWithKeys(function ($value, $key) {
-                $field = field($key);
+                $callback = in_array($key, static::$translatableFields)
+                    ? fn () => $this->translateFields()
+                    : null;
+                $field = field($key, $callback);
                 if (collect($this->model()->getCasts())->keys()->contains($key)) {
                     $field = $field->readOnly();
                 }
                 return [$key => $field];
-            })->all();
+            })->toArray();
+    }
+
+    protected function translateFields(): array
+    {
+        // @todo auto detect translation fields
+        return [
+            'name' => $this->model()->translateAttribute('name'),
+            'description' => $this->model()->translateAttribute('description'),
+        ];
     }
 }
