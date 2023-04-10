@@ -11,7 +11,7 @@ class LanguageMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        $locale = $request->header('Language-Code') ?? $request->header('Accept-Language');
+        $locale = $request->header('Language-Locale') ?? $request->header('Accept-Language');
         if (strlen($locale) > 2) {
             $locale = substr($locale, 0, 2);
         }
