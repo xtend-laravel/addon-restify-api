@@ -20,6 +20,9 @@ class ItemsCollectionGetter extends Getter
     {
         $widget = $model->model();
         $widgetParams = $widget->params;
+        // @todo Handle request replacements in a separate class
+        $requestParams = json_decode($request->params, true);
+        $widgetParams['collection_id'] = $requestParams['collectionId'] ?? $widgetParams['collection_id'];
 
         if ($widgetParams['collection_id'] === null) {
             return response()->json([
