@@ -3,7 +3,7 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Fields\HasMany;
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CollectionPresenter;
@@ -29,7 +29,7 @@ class CollectionRepository extends Repository
     public function getters(RestifyRequest $request): array
     {
         return [
-            FilterGroupsGetter::make(),
+            Lunar\CollectionImageGetter::new()->onlyOnShow(),
         ];
     }
 }

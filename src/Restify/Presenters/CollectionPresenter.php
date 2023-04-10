@@ -13,6 +13,7 @@ class CollectionPresenter extends PresenterResource implements Presentable
             'id' => $this->data['id'],
             'name' => $this->data['attribute_data']['name'],
             'description' => $this->data['attribute_data']['description'] ?? null,
+            'images' => $this->getter($request, 'collection-image'),
         ];
     }
 }
