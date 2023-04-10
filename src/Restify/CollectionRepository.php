@@ -2,6 +2,7 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Fields\HasMany;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
@@ -16,6 +17,14 @@ class CollectionRepository extends Repository
     public static array $excludeFields = ['_lft', '_rgt'];
 
     public static bool|array $public = true;
+
+    public static function related(): array
+    {
+        return [
+            HasMany::make('products', ProductRepository::class),
+            HasMany::make('children', CollectionRepository::class),
+        ];
+    }
 
     public function getters(RestifyRequest $request): array
     {
