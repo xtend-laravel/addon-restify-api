@@ -28,6 +28,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             'status' => $this->data['status'] ?? '--',
             'images' => $this->getter($request, 'product-images'),
             'prices' => $this->getter($request, 'product-prices'),
+            'variants' => $this->getter($request, 'product-variants'),
             'legacy_data' => $this->data['legacy_data'] ?? [],
         ];
     }

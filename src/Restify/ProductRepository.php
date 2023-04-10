@@ -68,6 +68,7 @@ class ProductRepository extends Repository
         return [
             Lunar\ProductImagesGetter::new()->onlyOnShow(),
             Lunar\ProductPricesGetter::new()->onlyOnShow(),
+            Lunar\ProductVariantsGetter::new()->onlyOnShow(),
         ];
     }
 }
