@@ -12,6 +12,7 @@ use Lunar\Models\Cart;
 use Lunar\Models\Collection;
 use Lunar\Models\Order;
 use Lunar\Models\Product;
+use XtendLunar\Addons\RestifyApi\Middleware\LanguageMiddleware;
 use XtendLunar\Addons\RestifyApi\Policies\BrandPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CartPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CollectionPolicy;
@@ -39,6 +40,7 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'xtend-lunar::restify-api');
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'xtend-lunar::restify-api');
+        $this->registerLanguageMiddleware();
 
         $this->booting(function () {
             $this->registerPolicies();
@@ -75,5 +77,13 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
+    }
+
+    protected function registerLanguageMiddleware(): void
+    {
+        $restifyMiddleware = config('restify.middleware');
+        config(['restify.middleware' => array_merge($restifyMiddleware, [
+            LanguageMiddleware::class,
+        ])]);
     }
 }
