@@ -29,7 +29,7 @@ class FilterGroupsGetter extends Getter
             $model = $model->model();
             return data([
                 'groups' => [
-                    'categories' => CategoryResource::make(Collection::find(2)),
+                    'categories' => CategoryResource::make(Collection::query()->first()),
                     'brands' => $this->getBrands($model),
                     'price' => $this->getPriceFilter($model),
                     'options' => $this->getOptions($model),
