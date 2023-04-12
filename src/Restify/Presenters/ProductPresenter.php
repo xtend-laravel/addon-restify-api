@@ -17,14 +17,14 @@ class ProductPresenter extends PresenterResource implements Presentable
     {
         return [
             'id' => $this->data['product_id'] ?? $this->data['id'],
-            'name' => $this->data['attribute_data']['name'],
+            'name' => $this->repository->resource->translateAttribute('name'),
             'brand' => $this->data['legacy_data']['manufacturer_name'] ?? '--',
             'primary_category_id' => $this->data['primary_category_id'],
             'category_slug' => Url::query()->firstWhere([
                 'element_id' => $this->data['primary_category_id'],
                 'element_type' => Collection::class,
             ])->slug ?? '--',
-            'description' => $this->data['attribute_data']['description'],
+            'description' => $this->repository->resource->translateAttribute('description'),
             'status' => $this->data['status'] ?? '--',
             'images' => $this->getter($request, 'product-images'),
             'prices' => $this->getter($request, 'product-prices'),
