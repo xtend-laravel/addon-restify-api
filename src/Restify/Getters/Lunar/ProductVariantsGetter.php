@@ -58,7 +58,8 @@ class ProductVariantsGetter extends Getter
             'id' => $productOptionValue->id,
             'name' => $productOptionValue->name,
             'price' => $productOptionValue->price,
-            'image' => $productVariant->image?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
+            'color' => $productOptionValue->color ?? null,
+            'image' => $productVariant->images?->first()?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
         ];
     }
 }
