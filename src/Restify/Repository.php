@@ -2,6 +2,7 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Fields\FieldCollection;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithPresenter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
@@ -63,5 +64,17 @@ abstract class Repository extends RestifyRepository
     public static function showQuery(RestifyRequest $request, Builder|Relation $query)
     {
         return $query;
+    }
+
+    public function collectFields(RestifyRequest $request): FieldCollection
+    {
+        if (auth()->check() && $request->user()->customers()->exists()) {
+            $request->merge([
+                'customer_id' => $request->user()->customers()->first()->id,
+                'user_id' => $request->user()->id,
+            ]);
+        }
+
+        return parent::collectFields($request);
     }
 }

@@ -3,6 +3,7 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Concerns;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Illuminate\Support\Facades\Schema;
 
 trait InteractsWithDefaultFields
 {
@@ -41,7 +42,10 @@ trait InteractsWithDefaultFields
 
     protected function getDefaultFields(array $exclude = []): array
     {
-        return collect($this->model()->toArray())
+        $fields = !$this->model()->exists
+            ? collect(Schema::getColumnListing($this->model()->getTable()))->flatMap(fn ($field) => [$field => null])->toArray()
+            : $this->model()->toArray();
+        return collect($fields)
             ->filter(fn($attribute, $field) => !in_array($field, $exclude))
             ->mapWithKeys(function ($value, $key) {
                 $callback = in_array($key, static::$translatableFields)

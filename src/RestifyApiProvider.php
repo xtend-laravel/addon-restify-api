@@ -7,12 +7,14 @@ use Binaryk\LaravelRestify\Traits\InteractsWithRestifyRepositories;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Lunar\Models\Address;
 use Lunar\Models\Brand;
 use Lunar\Models\Cart;
 use Lunar\Models\Collection;
 use Lunar\Models\Order;
 use Lunar\Models\Product;
 use XtendLunar\Addons\RestifyApi\Middleware\LanguageMiddleware;
+use XtendLunar\Addons\RestifyApi\Policies\AddressPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\BrandPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CartPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CollectionPolicy;
@@ -31,6 +33,7 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
     protected $policies = [
         Order::class => OrderPolicy::class,
         Cart::class => CartPolicy::class,
+        Address::class => AddressPolicy::class,
         Brand::class => BrandPolicy::class,
         Collection::class => CollectionPolicy::class,
         Product::class => ProductPolicy::class,
