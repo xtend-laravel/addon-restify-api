@@ -35,8 +35,9 @@ class UpdateCartAction extends Action
 
     protected function getPurchasable(array $product): Purchasable|Model
     {
+        $variants = array_filter($product['variants'] ?? []);
         // when the product has no variants, we can just return the base variant
-        if (!isset($product['variants']) || blank($product['variants'])) {
+        if (blank($variants)) {
             return ProductVariant::query()->where([
                 'product_id' => $product['id'],
                 'base'       => true,
