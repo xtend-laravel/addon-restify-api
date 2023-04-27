@@ -25,28 +25,13 @@ class AddressPolicy
         return true;
     }
 
-    public function storeBulk(User $user): bool
-    {
-        return false;
-    }
-
     public function update(User $user, Address $model): bool
     {
-        return false;
-    }
-
-    public function updateBulk(User $user, Address $model): bool
-    {
-        return false;
-    }
-
-    public function deleteBulk(User $user, Address $model): bool
-    {
-        return false;
+        return true;
     }
 
     public function delete(User $user, Address $model): bool
     {
-        return false;
+        return true;
     }
 }
