@@ -9,7 +9,7 @@ use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\Collection;
 use Lunar\Models\Url;
 
-class ProductPresenter extends PresenterResource implements Presentable
+class ProductRelatedPresenter extends PresenterResource implements Presentable
 {
     protected ProductRepository|RestifyRepository $repository;
 
@@ -29,7 +29,6 @@ class ProductPresenter extends PresenterResource implements Presentable
             'images' => $this->getter($request, 'product-images'),
             'prices' => $this->getter($request, 'product-prices'),
             'variants' => $this->getter($request, 'product-variants'),
-            //'related_items' => $this->getter($request, 'product-related-items'),
             'legacy_data' => $this->data['legacy_data'] ?? [],
         ];
     }
