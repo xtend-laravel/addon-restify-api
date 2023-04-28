@@ -2,6 +2,8 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
+use Illuminate\Support\Collection;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\ProductPresenter;
 use Binaryk\LaravelRestify\Fields\BelongsTo;
@@ -30,13 +32,13 @@ class ProductRepository extends Repository
     public static function sorts(): array
     {
         return [
-            'default' => function(RestifyRequest $request, Builder $query, $direction) {
+            'default' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->reorder();
             },
-            'name' => function(RestifyRequest $request, Builder $query, $direction) {
+            'name'    => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy('attribute_data->name', $direction);
             },
-            'price' => function(RestifyRequest $request, Builder $query, $direction) {
+            'price'   => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy(
                     Price::select('price')
                         ->whereColumn('id', $query->getModel()->getTable() . '.price_default_id')
@@ -48,10 +50,10 @@ class ProductRepository extends Repository
     public static function matches(): array
     {
         return [
-            'brands' => Filters\Product\BrandsFilter::make(),
+            'brands'     => Filters\Product\BrandsFilter::make(),
             'categories' => Filters\Product\CategoriesFilter::make(),
-            'keyword' => Filters\Product\KeywordFilter::make(),
-            'prices' => Filters\Product\PricesFilter::make(),
+            'keyword'    => Filters\Product\KeywordFilter::make(),
+            'prices'     => Filters\Product\PricesFilter::make(),
         ];
     }
 

@@ -14,9 +14,11 @@ class BrandsFilter extends MatchFilter
     public function filter(RestifyRequest $request, Relation|Builder $query, $value)
     {
         $brandIds = explode(',', $value);
+
         $query->whereIntegerInRaw('brand_id', $brandIds);
 
         $query->orderByRaw('FIELD(brand_id, ' . implode(',', $brandIds) . ') DESC');
+
         return $query;
     }
 }
