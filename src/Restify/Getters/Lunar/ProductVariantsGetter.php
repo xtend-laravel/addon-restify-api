@@ -40,7 +40,7 @@ class ProductVariantsGetter extends Getter
             ->mapWithKeys(fn ($variantValue, $key) => [
                 $this->getGroupName($key) => $variantValue->keyBy('value.id')->map(
                     fn (array $item) => $this->getVariantOption($item['value'], $item['variant']),
-                ),
+                )->filter(fn ($item) => $item['stock'] > 0),
             ]);
 
         return $options;
@@ -60,6 +60,7 @@ class ProductVariantsGetter extends Getter
             'price' => $productOptionValue->price,
             'color' => $productOptionValue->color ?? null,
             'image' => $productVariant->images?->first()?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
+            'stock' => $productOptionValue->product_option_id !== 2 ? $productVariant->stock : 999999,
         ];
     }
 }
