@@ -3,6 +3,7 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
 use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
+use Illuminate\Database\Query\Builder;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
@@ -94,27 +95,25 @@ class FilterGroupsGetter extends Getter
 
     protected function getOptions(BaseModel $model): array
     {
-//        $productQuery = $model->products()->where('status', 'published');
-//
-//        $sizeOption = ProductOption::where('handle', 'size')->first();
-//        $colorOption = ProductOption::where('handle', 'color')->first();
-//
-//        $productIds = $productQuery->pluck($productQuery->qualifyColumn('id'));
-//        $variantQuery = ProductVariant::whereIn('product_id', $productIds);
-//        $variantIds = $variantQuery->pluck('id');
-//        dd($variantIds);
-//
-//        // size option values get by all avaiable values of products variants
-//        $sizeOptionValues = $sizeOption->values()->whereRelation('variants', 'product_id', $productQuery->pluck('id'))->get();
-//        dd($sizeOptionValues);
+        $productQuery = $model->products()->where('status', 'published');
 
-        // color option values get by all avaiable values of products variants
+        $sizeOption = ProductOption::where('handle', 'size')->first();
+        $colorOption = ProductOption::where('handle', 'color')->first();
 
-        // color option values
+        $productIds = $productQuery->pluck($productQuery->qualifyColumn('id'));
+        $variantIds = ProductVariant::whereIn('product_id', $productIds)->pluck('id');
+
+        $sizeOptionValues = $sizeOption->values()->whereHas('variants', function (\Illuminate\Contracts\Database\Query\Builder $query) use ($variantIds) {
+            $query->whereIn($query->qualifyColumn('id'), $variantIds);
+        })->get();
+
+        $colorOptionValues = $colorOption->values()->whereHas('variants', function (\Illuminate\Contracts\Database\Query\Builder $query) use ($variantIds) {
+            $query->whereIn($query->qualifyColumn('id'), $variantIds);
+        })->get();
 
         return [
-            'sizes'  => [],
-            'colors' => [],
+            'sizes'  => $sizeOptionValues->toArray(),
+            'colors' => $colorOptionValues->toArray(),
         ];
     }
 }
