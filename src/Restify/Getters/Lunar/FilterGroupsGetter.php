@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
 use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
@@ -38,7 +39,7 @@ class FilterGroupsGetter extends Getter
                 'groups' => [
                     'categories' => CategoryResource::make(Collection::query()->first()),
                     'brands'     => $this->getBrands($model),
-                    'price'      => $this->getPriceFilter($model),
+                    'price'      => $this->getPriceFilter($model, $request),
                     'options'    => $this->getOptions($model),
                 ],
             ]);
@@ -95,25 +96,28 @@ class FilterGroupsGetter extends Getter
 
     protected function getOptions(BaseModel $model): array
     {
-        $productQuery = $model->products()->where('status', 'published');
-
         $sizeOption = ProductOption::where('handle', 'size')->first();
         $colorOption = ProductOption::where('handle', 'color')->first();
-
-        $productIds = $productQuery->pluck($productQuery->qualifyColumn('id'));
-        $variantIds = ProductVariant::whereIn('product_id', $productIds)->pluck('id');
-
-        $sizeOptionValues = $sizeOption->values()->whereHas('variants', function (\Illuminate\Contracts\Database\Query\Builder $query) use ($variantIds) {
-            $query->whereIn($query->qualifyColumn('id'), $variantIds);
-        })->get();
-
-        $colorOptionValues = $colorOption->values()->whereHas('variants', function (\Illuminate\Contracts\Database\Query\Builder $query) use ($variantIds) {
-            $query->whereIn($query->qualifyColumn('id'), $variantIds);
-        })->get();
+        $productIds = $model->products()->where('status', 'published')->pluck('product_id');
+        $variants = ProductVariant::query()->select('id')->where('stock', '>', 0)->whereIntegerInRaw('product_id', $productIds)->get();
+        $variantIds = $variants->pluck('id');
 
         return [
-            'sizes'  => $sizeOptionValues->toArray(),
-            'colors' => $colorOptionValues->toArray(),
+            'sizes'  => $this->getAttributeOptionsValues($sizeOption, $variantIds)->toArray(),
+            'colors' => $this->getAttributeOptionsValues($colorOption, $variantIds)->toArray(),
         ];
+    }
+
+    protected function getAttributeOptionsValues(ProductOption $productOption, \Illuminate\Support\Collection $variantIds): \Illuminate\Support\Collection
+    {
+        return $productOption
+            ->values()
+            ->whereHas('variants', fn($query) => $query->whereIntegerInRaw('variant_id', $variantIds))
+            ->get()
+            ->map(fn(ProductOptionValue $value) => [
+                'id' => $value->id,
+                'name' => $value->name,
+                'position' => $value->position,
+            ]);
     }
 }
