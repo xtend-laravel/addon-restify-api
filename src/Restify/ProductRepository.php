@@ -54,6 +54,8 @@ class ProductRepository extends Repository
             'categories' => Filters\Product\CategoriesFilter::make(),
             'keyword'    => Filters\Product\KeywordFilter::make(),
             'prices'     => Filters\Product\PricesFilter::make(),
+            'colors' => Filters\Product\ColorsFilter::make(),
+
         ];
     }
 
