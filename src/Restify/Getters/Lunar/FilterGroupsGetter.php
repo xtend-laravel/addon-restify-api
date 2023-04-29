@@ -40,7 +40,7 @@ class FilterGroupsGetter extends Getter
                     'categories' => CategoryResource::make(Collection::query()->first()),
                     'brands'     => $this->getBrands($model),
                     'price'      => $this->getPriceFilter($model, $request),
-                    'options'    => $this->getOptions($model),
+                    'options'    => $this->getOptions($model, $request),
                 ],
             ]);
         }
@@ -51,7 +51,7 @@ class FilterGroupsGetter extends Getter
                 'categories' => CategoryResource::make($model),
                 'brands'     => $this->getBrands($model),
                 'price'      => $this->getPriceFilter($model, $request),
-                'options'    => $this->getOptions($model),
+                'options'    => $this->getOptions($model, $request),
             ],
         ]);
     }
@@ -94,11 +94,20 @@ class FilterGroupsGetter extends Getter
         return $priceRange;
     }
 
-    protected function getOptions(BaseModel $model): array
+    protected function getOptions(BaseModel $model, RestifyRequest $request): array
     {
+        $newRequest = match ($request->currentGroup) {
+            'colors' => $request->except(['availableColorIds']),
+            'sizes'  => $request->except(['availableSizeIds']),
+            default  => $request->all(),
+        };
+
+        $request = new RestifyRequest($newRequest);
+        $productQuery = RepositorySearchService::make()->search($request, app()->make(ProductRepository::class));
+
         $sizeOption = ProductOption::where('handle', 'size')->first();
         $colorOption = ProductOption::where('handle', 'color')->first();
-        $productIds = $model->products()->where('status', 'published')->pluck('product_id');
+        $productIds = $productQuery->pluck('id');
         $variants = ProductVariant::query()->select('id')->where('stock', '>', 0)->whereIntegerInRaw('product_id', $productIds)->get();
         $variantIds = $variants->pluck('id');
 
