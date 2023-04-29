@@ -26,19 +26,22 @@ class ProductRepository extends Repository
 
     public static function indexQuery(RestifyRequest $request, Builder|Relation $query)
     {
-        return $query->where('status', 'published');
+        return $query->where('status', 'published')->latest();
     }
 
     public static function sorts(): array
     {
         return [
-            'default' => function (RestifyRequest $request, Builder $query, $direction) {
+            'default' => function (RestifyRequest $request, Builder $query) {
                 $query->reorder();
             },
-            'name'    => function (RestifyRequest $request, Builder $query, $direction) {
+            'new' => function (RestifyRequest $request, Builder $query) {
+                $query->latest();
+            },
+            'name' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy('attribute_data->name', $direction);
             },
-            'price'   => function (RestifyRequest $request, Builder $query, $direction) {
+            'price' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy(
                     Price::select('price')
                         ->whereColumn('id', $query->getModel()->getTable() . '.price_default_id')
