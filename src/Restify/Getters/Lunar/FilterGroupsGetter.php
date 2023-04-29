@@ -3,8 +3,8 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
 use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
@@ -20,13 +20,12 @@ use Illuminate\Http\JsonResponse;
 use Lunar\Base\BaseModel;
 use Lunar\Models\Price;
 use Lunar\Models\Brand;
-use Xtend\Extensions\Lunar\Core\Models\Collection;
 
 class FilterGroupsGetter extends Getter
 {
     protected RestifyRequest $request;
 
-    protected \Illuminate\Database\Eloquent\Builder $productQuery;
+    protected Builder $productQuery;
 
     public static $uriKey = 'filter-groups';
 
@@ -38,36 +37,28 @@ class FilterGroupsGetter extends Getter
 
         $this->interceptRequest($request);
 
-        // brands
         if ($model instanceof BrandRepository) {
-            $model = $model->model();
             return data([
                 'groups' => [
-                    'categories' => CategoryResource::make(Collection::query()->first()),
-                    'brands'     => $this->getBrands($model, $request),
-                    'price'      => $this->getPriceFilter($model, $request),
-                    'options'    => $this->getOptions($model, $request),
+                    'categories' => CategoryResource::make(\Lunar\Models\Collection::query()->first()),
+                    'brands'     => $this->getBrands($request),
+                    'price'      => $this->getPriceFilter($request),
+                    'options'    => $this->getOptions($request),
                 ],
             ]);
         }
 
-        // collection
         return data([
             'groups' => [
                 'categories' => CategoryResource::make($model, $request),
-                'brands'     => $this->getBrands($model, $request),
-                'price'      => $this->getPriceFilter($model, $request),
-                'options'    => $this->getOptions($model, $request),
+                'brands'     => $this->getBrands($request),
+                'price'      => $this->getPriceFilter($request),
+                'options'    => $this->getOptions($request),
             ],
         ]);
     }
 
-    protected function getCategories(BaseModel $model): array
-    {
-        return CategoryResource::make($model)->resolve();
-    }
-
-    protected function getBrands(BaseModel $model, RestifyRequest $request): array
+    protected function getBrands(RestifyRequest $request): array
     {
         $this->interceptRequest($request, 'brands');
 
@@ -81,7 +72,10 @@ class FilterGroupsGetter extends Getter
         ])->toArray();
     }
 
-    protected function getPriceFilter(BaseModel $model, RestifyRequest $request): array
+    /**
+     * @todo Optimise query and get correct price range to consider discounted products
+     */
+    protected function getPriceFilter(RestifyRequest $request): array
     {
         $this->interceptRequest($request, 'price');
 
@@ -100,7 +94,7 @@ class FilterGroupsGetter extends Getter
         return $priceRange;
     }
 
-    protected function getOptions(BaseModel $model, RestifyRequest $request): array
+    protected function getOptions(RestifyRequest $request): array
     {
         $this->interceptRequest($request, 'options');
 
@@ -116,7 +110,7 @@ class FilterGroupsGetter extends Getter
         ];
     }
 
-    protected function getAttributeOptionsValues(ProductOption $productOption, \Illuminate\Support\Collection $variantIds): \Illuminate\Support\Collection
+    protected function getAttributeOptionsValues(ProductOption $productOption, Collection $variantIds): Collection
     {
         return $productOption
             ->values()
@@ -129,7 +123,7 @@ class FilterGroupsGetter extends Getter
             ]);
     }
 
-    protected function interceptRequest(RestifyRequest $request, string $for = null)
+    protected function interceptRequest(RestifyRequest $request, string $for = null): void
     {
         $newRequest = match ($request->currentGroup) {
             'brands' => $request->except(['brand_id']),
