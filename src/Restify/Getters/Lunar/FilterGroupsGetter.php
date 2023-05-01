@@ -23,6 +23,8 @@ use Lunar\Models\Brand;
 
 class FilterGroupsGetter extends Getter
 {
+    protected BaseModel|Repository $model;
+
     protected RestifyRequest $request;
 
     protected Builder $productQuery;
@@ -31,16 +33,15 @@ class FilterGroupsGetter extends Getter
 
     public function handle(RestifyRequest $request, BaseModel|Repository $model = null): JsonResponse
     {
-        if ($model instanceof CategoryRepository || $model instanceof CollectionRepository) {
-            $model = $model->model();
-        }
-
-        $this->interceptRequest($request);
+        $this->model = $model;
+        $request = $request->merge([
+            'repositoryUri' => $this->model->uriKey(),
+        ]);
 
         if ($model instanceof BrandRepository) {
             return data([
                 'groups' => [
-                    'categories' => CategoryResource::make(\Lunar\Models\Collection::query()->first()),
+                    'categories' => $this->getCategories($request),
                     'brands'     => $this->getBrands($request),
                     'price'      => $this->getPriceFilter($request),
                     'options'    => $this->getOptions($request),
@@ -50,12 +51,23 @@ class FilterGroupsGetter extends Getter
 
         return data([
             'groups' => [
-                'categories' => CategoryResource::make($model, $request),
+                'categories' => CategoryResource::make($this->model->model(), $request),
                 'brands'     => $this->getBrands($request),
                 'price'      => $this->getPriceFilter($request),
                 'options'    => $this->getOptions($request),
             ],
         ]);
+    }
+
+    protected function getCategories(RestifyRequest $request): Collection
+    {
+        $this->interceptRequest($request, 'categories');
+        $categories = $this->productQuery->pluck('primary_category_id')->unique();
+
+        return $categories->map(fn($categoryId) => CategoryResource::make(
+            \Lunar\Models\Collection::find($categoryId),
+            $request,
+        ))->values();
     }
 
     protected function getBrands(RestifyRequest $request): array
@@ -141,5 +153,10 @@ class FilterGroupsGetter extends Getter
             : $request;
 
         $this->productQuery = RepositorySearchService::make()->search($this->request, app()->make(ProductRepository::class));
+
+        // @todo: Replace this when we have a better way to handle this temp work around to filter initial products by brand
+        if ($this->model instanceof BrandRepository) {
+            $this->productQuery->where('brand_id', $this->model->model()->id);
+        }
     }
 }
