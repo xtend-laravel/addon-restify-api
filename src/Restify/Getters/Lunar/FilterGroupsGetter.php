@@ -12,7 +12,9 @@ use XtendLunar\Addons\RestifyApi\Resources\CategoryResource;
 use XtendLunar\Addons\RestifyApi\Restify\BrandRepository;
 use XtendLunar\Addons\RestifyApi\Restify\CategoryRepository;
 use XtendLunar\Addons\RestifyApi\Restify\CollectionRepository;
+use XtendLunar\Addons\RestifyApi\Restify\ProductNewItemsRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
+use XtendLunar\Addons\RestifyApi\Restify\ProductSaleItemsRepository;
 use XtendLunar\Addons\RestifyApi\Restify\Repository;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
@@ -46,6 +48,17 @@ class FilterGroupsGetter extends Getter
                     'price'      => $this->getPriceFilter($request),
                     'options'    => $this->getOptions($request),
                 ],
+            ]);
+        }
+
+        if ($model instanceof ProductNewItemsRepository || $model instanceof ProductSaleItemsRepository) {
+            return data([
+               'groups' => [
+                   //'categories' => $this->getCategories($request),
+                   'brands'     => $this->getBrands($request),
+                   'price'      => $this->getPriceFilter($request),
+                   'options'    => $this->getOptions($request),
+               ],
             ]);
         }
 
