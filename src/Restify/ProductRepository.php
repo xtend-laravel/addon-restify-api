@@ -59,7 +59,8 @@ class ProductRepository extends Repository
             'prices'     => Filters\Product\PricesFilter::make(),
             'colors'     => Filters\Product\ColorsFilter::make(),
             'sizes'      => Filters\Product\SizesFilter::make(),
-
+            'newest'     => Filters\Product\NewestFilter::make(),
+            'sale'       => Filters\Product\SaleFilter::make(),
         ];
     }
 
