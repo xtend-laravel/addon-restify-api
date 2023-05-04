@@ -13,7 +13,7 @@ class CategoryPresenter extends PresenterResource implements Presentable
             'id' => $this->data['id'],
             'name' => $this->data['attribute_data']['name'],
             'description' => $this->data['attribute_data']['description'] ?? null,
-            'filters' => !$request->has('related') ? $this->getter($request, 'filter-groups') : null,
+            'filters' => $this->getter($request, 'filter-groups'),
         ];
     }
 }
