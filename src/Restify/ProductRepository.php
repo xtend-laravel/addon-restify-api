@@ -26,7 +26,10 @@ class ProductRepository extends Repository
 
     public static function indexQuery(RestifyRequest $request, Builder|Relation $query)
     {
-        return $query->where('status', 'published')->latest();
+        return $query
+            ->where('status', 'published')
+            ->where('stock', '>', 0)
+            ->latest();
     }
 
     public static function sorts(): array
