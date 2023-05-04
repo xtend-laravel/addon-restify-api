@@ -26,7 +26,7 @@ abstract class PresenterResource
         return new static($repository, $data);
     }
 
-    protected function getter(RestifyRequest $request, string $getterUri): array
+    public function getter(RestifyRequest $request, string $getterUri): array
     {
         return $this->repository
             ->resolveGetters($request)

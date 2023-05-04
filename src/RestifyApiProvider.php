@@ -11,6 +11,7 @@ use Lunar\Models\Address;
 use Lunar\Models\Brand;
 use Lunar\Models\Cart;
 use Lunar\Models\Collection;
+use Lunar\Models\Customer;
 use Lunar\Models\Order;
 use Lunar\Models\Product;
 use XtendLunar\Addons\RestifyApi\Middleware\LanguageMiddleware;
@@ -18,6 +19,7 @@ use XtendLunar\Addons\RestifyApi\Policies\AddressPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\BrandPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CartPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CollectionPolicy;
+use XtendLunar\Addons\RestifyApi\Policies\CustomerPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\OrderPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\ProductPolicy;
 
@@ -37,6 +39,7 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
         Brand::class => BrandPolicy::class,
         Collection::class => CollectionPolicy::class,
         Product::class => ProductPolicy::class,
+        Customer::class => CustomerPolicy::class,
     ];
 
     public function register()

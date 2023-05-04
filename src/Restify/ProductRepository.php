@@ -26,19 +26,22 @@ class ProductRepository extends Repository
 
     public static function indexQuery(RestifyRequest $request, Builder|Relation $query)
     {
-        return $query->where('status', 'published');
+        return $query->where('status', 'published')->latest();
     }
 
     public static function sorts(): array
     {
         return [
-            'default' => function (RestifyRequest $request, Builder $query, $direction) {
+            'default' => function (RestifyRequest $request, Builder $query) {
                 $query->reorder();
             },
-            'name'    => function (RestifyRequest $request, Builder $query, $direction) {
+            'new' => function (RestifyRequest $request, Builder $query) {
+                $query->latest();
+            },
+            'name' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy('attribute_data->name', $direction);
             },
-            'price'   => function (RestifyRequest $request, Builder $query, $direction) {
+            'price' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy(
                     Price::select('price')
                         ->whereColumn('id', $query->getModel()->getTable() . '.price_default_id')
@@ -50,12 +53,14 @@ class ProductRepository extends Repository
     public static function matches(): array
     {
         return [
+            'newest'     => Filters\Product\NewestFilter::make(),
+            'sale'       => Filters\Product\SaleFilter::make(),
             'brands'     => Filters\Product\BrandsFilter::make(),
             'categories' => Filters\Product\CategoriesFilter::make(),
             'keyword'    => Filters\Product\KeywordFilter::make(),
             'prices'     => Filters\Product\PricesFilter::make(),
-            'colors' => Filters\Product\ColorsFilter::make(),
-
+            'colors'     => Filters\Product\ColorsFilter::make(),
+            'sizes'      => Filters\Product\SizesFilter::make(),
         ];
     }
 
