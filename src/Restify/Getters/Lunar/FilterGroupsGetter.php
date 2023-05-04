@@ -88,13 +88,23 @@ class FilterGroupsGetter extends Getter
     {
         $this->interceptRequest($request, 'brands');
 
+        $brandCounts = Product::query()
+            ->selectRaw('count(*) as brand_count, brand_id')
+            ->whereNotNull('brand_id')
+            ->whereIntegerInRaw('id', $this->productQuery->pluck('id'))
+            ->where('status', 'published')
+            ->where('stock', '>', 0)
+            ->groupBy('brand_id')
+            ->get()
+            ->keyBy('brand_id');
+
         return Brand::query()->find(
             id: $this->productQuery->pluck('brand_id')->unique(),
             columns: ['id', 'name'],
-        )->map(fn(Brand $brand) => [
+        )->filter(fn(Brand $brand) => $brand->products->count() > 1)->map(fn(Brand $brand) => [
             'id'    => $brand->id,
             'name'  => $brand->name,
-            'count' => Product::query()->whereIn('id', $this->productQuery->pluck('id'))->where('brand_id', $brand->id)->count(),
+            'count' => $brandCounts->get($brand->id)?->brand_count ?? 0,
         ])->toArray();
     }
 
@@ -168,9 +178,13 @@ class FilterGroupsGetter extends Getter
 
         $this->productQuery = RepositorySearchService::make()->search($this->request, app()->make(ProductRepository::class));
 
+
         // @todo: Replace this when we have a better way to handle this temp work around to filter initial products by brand
         if ($this->model instanceof BrandRepository) {
             $this->productQuery->where('brand_id', $this->model->model()->id);
         }
+
+        $this->productQuery->where('status', 'published');
+        $this->productQuery->where('stock', '>', 0);
     }
 }
