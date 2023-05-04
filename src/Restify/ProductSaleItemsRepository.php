@@ -12,7 +12,7 @@ class ProductSaleItemsRepository extends Repository
     use InteractsWithCustomRoutes;
 
     public static array $routes = [
-        'sale' => [
+        'sales' => [
             'prefix' => 'api/restify',
             'public' => true,
         ],

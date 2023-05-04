@@ -53,14 +53,14 @@ class ProductRepository extends Repository
     public static function matches(): array
     {
         return [
+            'newest'     => Filters\Product\NewestFilter::make(),
+            'sale'       => Filters\Product\SaleFilter::make(),
             'brands'     => Filters\Product\BrandsFilter::make(),
             'categories' => Filters\Product\CategoriesFilter::make(),
             'keyword'    => Filters\Product\KeywordFilter::make(),
             'prices'     => Filters\Product\PricesFilter::make(),
             'colors'     => Filters\Product\ColorsFilter::make(),
             'sizes'      => Filters\Product\SizesFilter::make(),
-            'newest'     => Filters\Product\NewestFilter::make(),
-            'sale'       => Filters\Product\SaleFilter::make(),
         ];
     }
 

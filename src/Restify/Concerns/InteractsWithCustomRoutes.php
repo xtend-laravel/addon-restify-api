@@ -26,7 +26,7 @@ trait InteractsWithCustomRoutes
                         'repository' => new static,
                     ]);
                     $request = new RestifyRequest(request()->all());
-                    return response($presenter->transform($request));
+                    return data(['attributes' => $presenter->transform($request)]);
                 })->name($name)->withoutMiddleware($route['public'] ? 'auth:sanctum' : null);
             });
         });

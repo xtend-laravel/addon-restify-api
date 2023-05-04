@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Lunar\Models\Product;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
@@ -93,7 +94,7 @@ class FilterGroupsGetter extends Getter
         )->map(fn(Brand $brand) => [
             'id'    => $brand->id,
             'name'  => $brand->name,
-            'count' => $brand->products()->count(),
+            'count' => Product::query()->whereIn('id', $this->productQuery->pluck('id'))->where('brand_id', $brand->id)->count(),
         ])->toArray();
     }
 
