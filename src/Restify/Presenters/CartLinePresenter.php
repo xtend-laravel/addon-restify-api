@@ -14,7 +14,7 @@ class CartLinePresenter extends PresenterResource implements Presentable
     public function transform(RestifyRequest $request): array
     {
         return [
-            'id' => $this->data->purchasable->product_id,
+            'id' => $this->data->id,
             'product' => ProductPresenter::fromData(
                 repository: ProductRepository::resolveWith($this->data->purchasable->product),
                 data: $this->data->purchasable->product,

@@ -22,27 +22,29 @@ class CurrentCartGetter extends Getter
             'session_id' => $request->sessionId,
         ], [
             'currency_id' => Currency::getDefault()->id,
-            'channel_id' => Channel::getDefault()->id,
-            'user_id' => $request->userId ?? null,
+            'channel_id'  => Channel::getDefault()->id,
+            'user_id'     => $request->userId ?? null,
         ])->calculate();
+
 
         return data([
             'cart' => [
-                'id' => $cart->id,
+                'id'       => $cart->id,
                 'products' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
+                    $line->purchasable->load('values');
                     return CartLinePresenter::fromData(
                         repository: RestifyRepository::resolveWith($cart),
                         data: $line,
                     )->transform($request);
                 }),
-                'totals' => [
-                    'sub_total' => $cart->subTotal->value,
+                'totals'   => [
+                    'sub_total'      => $cart->subTotal->value,
                     'discount_total' => $cart->discountTotal?->value,
                     'shipping_total' => $cart->shippingTotal?->value,
-                    'tax_total' => $cart->taxTotal->value,
-                    'total' => $cart->total->value,
+                    'tax_total'      => $cart->taxTotal->value,
+                    'total'          => $cart->total->value,
                 ],
-                'meta' => $cart->meta,
+                'meta'     => $cart->meta,
             ],
         ]);
     }
