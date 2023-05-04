@@ -31,7 +31,8 @@ class CurrentCartGetter extends Getter
             'cart' => [
                 'id'       => $cart->id,
                 'products' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
-                    $line->purchasable->load('values');
+                    $line->purchasable->load('values.option');
+
                     return CartLinePresenter::fromData(
                         repository: RestifyRepository::resolveWith($cart),
                         data: $line,
