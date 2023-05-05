@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use XtendLunar\Addons\RestifyApi\Restify\Actions\RemoveLineAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateCartAction;
+use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateLineQuantityAction;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CheckoutGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CurrentCartGetter;
@@ -23,6 +24,7 @@ class CartRepository extends Repository
         return [
             UpdateCartAction::new()->onlyOnShow(),
             RemoveLineAction::new()->onlyOnShow(),
+            UpdateLineQuantityAction::new()->onlyOnShow(),
         ];
     }
 
