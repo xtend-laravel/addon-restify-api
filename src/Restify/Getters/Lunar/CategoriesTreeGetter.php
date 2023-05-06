@@ -15,11 +15,12 @@ class CategoriesTreeGetter extends Getter
 
     public function handle(RestifyRequest $request, Collection $model = null): JsonResponse|Response
     {
-        $resource = $model
-            ? CategoryResource::make($model)
-            : CategoryResource::collection(Collection::all());
         return response()->json([
-            'data' => $resource,
+            'data' => $model
+                ? CategoryResource::make($model)
+                : CategoryResource::collection(
+                    resource: Collection::query()->limit(1)->get(),
+                ),
         ]);
     }
 }
