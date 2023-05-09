@@ -19,7 +19,7 @@ class CategoriesTreeGetter extends Getter
             'data' => $model
                 ? CategoryResource::make($model)
                 : CategoryResource::collection(
-                    resource: Collection::query()->limit(1)->get(),
+                    resource: Collection::query()->where('_lft', 1)->get(),
                 ),
         ]);
     }
