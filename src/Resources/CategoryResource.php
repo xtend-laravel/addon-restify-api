@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Lunar\Models\Collection;
 
 class CategoryResource extends JsonResource
 {
@@ -18,8 +19,10 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'active' => (bool)($this->legacy_data['active'] ?? true),
             'name' => $this->resource->translateAttribute('name') ?? null,
-            //'count' => DB::table('lunar_collection_product')->where('collection_id', $this->id)->count(),
-            'children' => $request->repositoryUri !== 'brands' ? CategoryResource::collection($this->children) : null,
+            'count' => $this->publishedProducts()->where('stock', '>', 0)->count(),
+            'children' => $request->repositoryUri !== 'brands' ? CategoryResource::collection(
+                resource: $this->children->filter(fn (Collection $category) => $category->legacy_data['active'] ?? true),
+            ) : null,
         ];
     }
 }

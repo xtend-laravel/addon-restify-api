@@ -11,8 +11,6 @@ use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
 use XtendLunar\Addons\RestifyApi\Resources\CategoryResource;
 use XtendLunar\Addons\RestifyApi\Restify\BrandRepository;
-use XtendLunar\Addons\RestifyApi\Restify\CategoryRepository;
-use XtendLunar\Addons\RestifyApi\Restify\CollectionRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductNewItemsRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductSaleItemsRepository;
