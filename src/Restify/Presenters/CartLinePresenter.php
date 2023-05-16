@@ -21,7 +21,7 @@ class CartLinePresenter extends PresenterResource implements Presentable
             )->transform($request),
             'purchasable' => $this->data->purchasable,
             'quantity' => $this->data->quantity,
-            'total' => $this->data->total->value,
+            'total' => $this->data->total?->value,
         ];
     }
 }
