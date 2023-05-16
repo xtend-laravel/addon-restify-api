@@ -2,8 +2,8 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 
 class CategoryPresenter extends PresenterResource implements Presentable
 {
@@ -17,5 +17,3 @@ class CategoryPresenter extends PresenterResource implements Presentable
         ];
     }
 }
-
-

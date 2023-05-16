@@ -49,6 +49,7 @@ class ProductVariantsGetter extends Getter
     protected function getGroupName($key): string
     {
         $group = ProductOption::find($key);
+
         return Str::slug($group->translate('name'));
     }
 
@@ -60,7 +61,7 @@ class ProductVariantsGetter extends Getter
             'price' => $productOptionValue->price,
             'color' => $productOptionValue->color ?? null,
             'image' => $productVariant->images?->first()?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
-            'stock' => $productVariant->stock,
+            'stock' => $productOptionValue->product_option_id !== 2 ? $productVariant->stock : 999999,
         ];
     }
 }

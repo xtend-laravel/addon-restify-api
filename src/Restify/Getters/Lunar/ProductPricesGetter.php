@@ -2,12 +2,12 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
-use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Http\JsonResponse;
 use Lunar\Models\Product;
+use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 
 class ProductPricesGetter extends Getter
 {
@@ -20,6 +20,7 @@ class ProductPricesGetter extends Getter
         // @todo optimise to load relationship faster
         $productId = $repository->model()->product_id ?? $repository->model()->id;
         $product = Product::find($productId);
+
         return response()->json([
             'basePrice' => $product->basePrice?->price?->value ?? null,
         ]);

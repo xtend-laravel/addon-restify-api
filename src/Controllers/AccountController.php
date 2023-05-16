@@ -2,13 +2,14 @@
 
 namespace XtendLunar\Addons\RestifyApi\Controllers;
 
+use Binaryk\LaravelRestify\Http\Controllers\RestController;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Http\JsonResponse;
-use Binaryk\LaravelRestify\Http\Controllers\RestController;
 use Illuminate\Support\Str;
 
 /**
  * Class AccountController
+ *
  * @todo Each section of the account separate invokable controllers - currently single controller for all sections due to time constraints
  */
 class AccountController extends RestController

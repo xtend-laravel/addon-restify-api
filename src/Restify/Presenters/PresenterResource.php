@@ -30,7 +30,7 @@ abstract class PresenterResource
     {
         return $this->repository
             ->resolveGetters($request)
-            ->filter(fn(Getter $getter) => $getter->uriKey() === $getterUri)
+            ->filter(fn (Getter $getter) => $getter->uriKey() === $getterUri)
             ->first()
             ->handle($request, $this->repository)
             ->getData(true);

@@ -2,11 +2,11 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
-use XtendLunar\Addons\RestifyApi\Restify\CollectionRepository;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Http\JsonResponse;
+use XtendLunar\Addons\RestifyApi\Restify\CollectionRepository;
 
 class CollectionImageGetter extends Getter
 {

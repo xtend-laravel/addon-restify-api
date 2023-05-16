@@ -2,13 +2,11 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Lunar\Models\Brand;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\BrandPresenter;
-use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Lunar\Models\Brand;
 
 class BrandRepository extends Repository
 {

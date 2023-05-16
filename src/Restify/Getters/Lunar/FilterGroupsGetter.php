@@ -2,9 +2,15 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 
+use Binaryk\LaravelRestify\Getters\Getter;
+use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Lunar\Base\BaseModel;
+use Lunar\Models\Brand;
+use Lunar\Models\Price;
 use Lunar\Models\Product;
 use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
@@ -15,12 +21,6 @@ use XtendLunar\Addons\RestifyApi\Restify\ProductNewItemsRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use XtendLunar\Addons\RestifyApi\Restify\ProductSaleItemsRepository;
 use XtendLunar\Addons\RestifyApi\Restify\Repository;
-use Binaryk\LaravelRestify\Getters\Getter;
-use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
-use Illuminate\Http\JsonResponse;
-use Lunar\Base\BaseModel;
-use Lunar\Models\Price;
-use Lunar\Models\Brand;
 
 class FilterGroupsGetter extends Getter
 {
@@ -43,30 +43,30 @@ class FilterGroupsGetter extends Getter
             return data([
                 'groups' => [
                     'categories' => $this->getCategories($request),
-                    'brands'     => $this->getBrands($request),
-                    'price'      => $this->getPriceFilter($request),
-                    'options'    => $this->getOptions($request),
+                    'brands' => $this->getBrands($request),
+                    'price' => $this->getPriceFilter($request),
+                    'options' => $this->getOptions($request),
                 ],
             ]);
         }
 
         if ($model instanceof ProductNewItemsRepository || $model instanceof ProductSaleItemsRepository) {
             return data([
-               'groups' => [
-                   //'categories' => $this->getCategories($request),
-                   'brands'     => $this->getBrands($request),
-                   'price'      => $this->getPriceFilter($request),
-                   'options'    => $this->getOptions($request),
-               ],
+                'groups' => [
+                    //'categories' => $this->getCategories($request),
+                    'brands' => $this->getBrands($request),
+                    'price' => $this->getPriceFilter($request),
+                    'options' => $this->getOptions($request),
+                ],
             ]);
         }
 
         return data([
             'groups' => [
                 'categories' => CategoryResource::make($this->model->model(), $request),
-                'brands'     => $this->getBrands($request),
-                'price'      => $this->getPriceFilter($request),
-                'options'    => $this->getOptions($request),
+                'brands' => $this->getBrands($request),
+                'price' => $this->getPriceFilter($request),
+                'options' => $this->getOptions($request),
             ],
         ]);
     }
@@ -76,7 +76,7 @@ class FilterGroupsGetter extends Getter
         $this->interceptRequest($request, 'categories');
         $categories = $this->productQuery->pluck('primary_category_id')->unique();
 
-        return $categories->map(fn($categoryId) => CategoryResource::make(
+        return $categories->map(fn ($categoryId) => CategoryResource::make(
             \Lunar\Models\Collection::find($categoryId),
             $request,
         ))->values();
@@ -99,9 +99,9 @@ class FilterGroupsGetter extends Getter
         return Brand::query()->find(
             id: $this->productQuery->pluck('brand_id')->unique(),
             columns: ['id', 'name'],
-        )->filter(fn(Brand $brand) => $brand->products->count() > 1)->map(fn(Brand $brand) => [
-            'id'    => $brand->id,
-            'name'  => $brand->name,
+        )->filter(fn (Brand $brand) => $brand->products->count() > 1)->map(fn (Brand $brand) => [
+            'id' => $brand->id,
+            'name' => $brand->name,
             'count' => $brandCounts->get($brand->id)?->brand_count ?? 0,
         ])->toArray();
     }
@@ -139,7 +139,7 @@ class FilterGroupsGetter extends Getter
         $variantIds = $variants->pluck('id');
 
         return [
-            'sizes'  => $this->getAttributeOptionsValues($sizeOption, $variantIds)->toArray(),
+            'sizes' => $this->getAttributeOptionsValues($sizeOption, $variantIds)->toArray(),
             'colors' => $this->getAttributeOptionsValues($colorOption, $variantIds)->toArray(),
         ];
     }
@@ -148,9 +148,9 @@ class FilterGroupsGetter extends Getter
     {
         return $productOption
             ->values()
-            ->whereHas('variants', fn($query) => $query->whereIntegerInRaw('variant_id', $variantIds))
+            ->whereHas('variants', fn ($query) => $query->whereIntegerInRaw('variant_id', $variantIds))
             ->get()
-            ->map(fn(ProductOptionValue $value) => [
+            ->map(fn (ProductOptionValue $value) => [
                 'id' => $value->id,
                 'name' => $value->name,
                 'position' => $value->position,
@@ -162,8 +162,8 @@ class FilterGroupsGetter extends Getter
         $newRequest = match ($request->currentGroup) {
             'brands' => $request->except(['brand_id']),
             'colors' => $request->except(['availableColorIds']),
-            'sizes'  => $request->except(['availableSizeIds']),
-            default  => $request->all(),
+            'sizes' => $request->except(['availableSizeIds']),
+            default => $request->all(),
         };
 
         if ($for === 'options' && in_array($request->currentGroup, ['colors', 'sizes'])) {
@@ -175,7 +175,6 @@ class FilterGroupsGetter extends Getter
             : $request;
 
         $this->productQuery = RepositorySearchService::make()->search($this->request, app()->make(ProductRepository::class));
-
 
         // @todo: Replace this when we have a better way to handle this temp work around to filter initial products by brand
         if ($this->model instanceof BrandRepository) {

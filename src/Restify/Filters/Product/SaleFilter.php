@@ -16,6 +16,7 @@ class SaleFilter extends MatchFilter
         if ($value) {
             $query->where('legacy_data->reduction_amount', '>', 0);
         }
+
         return $query;
     }
 }

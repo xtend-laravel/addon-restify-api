@@ -14,6 +14,7 @@ class PricesFilter extends MatchFilter
     public function filter(RestifyRequest $request, Relation|Builder $query, $value)
     {
         [$min, $max] = explode(',', $value);
+
         return $query->whereHas('basePrice', function (Builder $query) use ($min, $max) {
             $query->whereBetween('price', [$min, $max]);
         });

@@ -2,14 +2,13 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Lunar\Models\Cart;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\RemoveLineAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateCartAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateLineQuantityAction;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CheckoutGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CurrentCartGetter;
-use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
-use Lunar\Models\Cart;
 
 class CartRepository extends Repository
 {

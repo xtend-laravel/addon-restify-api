@@ -17,7 +17,7 @@ class CategoryResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'active' => (bool)($this->legacy_data['active'] ?? true),
+            'active' => (bool) ($this->legacy_data['active'] ?? true),
             'name' => $this->resource->translateAttribute('name') ?? null,
             'count' => $this->publishedProducts()->where('stock', '>', 0)->count(),
             'children' => $request->repositoryUri !== 'brands' ? CategoryResource::collection(

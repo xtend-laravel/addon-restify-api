@@ -17,7 +17,7 @@ class RegisterController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
-            'email' => ['required', 'email', 'max:255', 'unique:' . Config::get('restify.auth.table', 'users')],
+            'email' => ['required', 'email', 'max:255', 'unique:'.Config::get('restify.auth.table', 'users')],
             'title' => ['sometimes', 'string', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['string', 'max:255'],
@@ -30,7 +30,7 @@ class RegisterController extends Controller
 
         return data([
             'user' => $user,
-            'token' => $user->createToken('login')
+            'token' => $user->createToken('login'),
         ]);
     }
 

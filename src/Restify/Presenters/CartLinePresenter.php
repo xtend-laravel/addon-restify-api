@@ -2,10 +2,10 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
-use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
+use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 
 class CartLinePresenter extends PresenterResource implements Presentable
 {
@@ -25,5 +25,3 @@ class CartLinePresenter extends PresenterResource implements Presentable
         ];
     }
 }
-
-

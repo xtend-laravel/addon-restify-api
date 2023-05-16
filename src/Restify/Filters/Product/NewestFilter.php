@@ -16,6 +16,7 @@ class NewestFilter extends MatchFilter
         if ($value) {
             $query->where('created_at', '>=', now()->subDays(30))->latest();
         }
+
         return $query;
     }
 }

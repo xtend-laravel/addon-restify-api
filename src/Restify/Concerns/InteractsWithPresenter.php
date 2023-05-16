@@ -2,9 +2,9 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Concerns;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 
 /**
  * Trait InteractsWithPresenter
@@ -41,7 +41,7 @@ trait InteractsWithPresenter
 
     protected function present(RestifyRequest $request, array $data): array
     {
-        if (!$data) {
+        if (! $data) {
             return $data;
         }
 

@@ -17,7 +17,7 @@ class BrandsFilter extends MatchFilter
 
         $query->whereIntegerInRaw('brand_id', $brandIds);
 
-        $query->orderByRaw('FIELD(brand_id, ' . implode(',', $brandIds) . ') DESC');
+        $query->orderByRaw('FIELD(brand_id, '.implode(',', $brandIds).') DESC');
 
         return $query;
     }

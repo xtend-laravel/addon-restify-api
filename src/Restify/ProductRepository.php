@@ -2,10 +2,6 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
-use Binaryk\LaravelRestify\Services\Search\RepositorySearchService;
-use Illuminate\Support\Collection;
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
-use XtendLunar\Addons\RestifyApi\Restify\Presenters\ProductPresenter;
 use Binaryk\LaravelRestify\Fields\BelongsTo;
 use Binaryk\LaravelRestify\Fields\BelongsToMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
@@ -13,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lunar\Models\Price;
 use Xtend\Extensions\Lunar\Core\Models\Product;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
+use XtendLunar\Addons\RestifyApi\Restify\Presenters\ProductPresenter;
 
 class ProductRepository extends Repository
 {
@@ -47,7 +45,7 @@ class ProductRepository extends Repository
             'price' => function (RestifyRequest $request, Builder $query, $direction) {
                 $query->orderBy(
                     Price::select('price')
-                        ->whereColumn('id', $query->getModel()->getTable() . '.price_default_id')
+                        ->whereColumn('id', $query->getModel()->getTable().'.price_default_id')
                         ->limit(1), $direction);
             },
         ];
@@ -56,14 +54,14 @@ class ProductRepository extends Repository
     public static function matches(): array
     {
         return [
-            'newest'     => Filters\Product\NewestFilter::make(),
-            'sale'       => Filters\Product\SaleFilter::make(),
-            'brands'     => Filters\Product\BrandsFilter::make(),
+            'newest' => Filters\Product\NewestFilter::make(),
+            'sale' => Filters\Product\SaleFilter::make(),
+            'brands' => Filters\Product\BrandsFilter::make(),
             'categories' => Filters\Product\CategoriesFilter::make(),
-            'keyword'    => Filters\Product\KeywordFilter::make(),
-            'prices'     => Filters\Product\PricesFilter::make(),
-            'colors'     => Filters\Product\ColorsFilter::make(),
-            'sizes'      => Filters\Product\SizesFilter::make(),
+            'keyword' => Filters\Product\KeywordFilter::make(),
+            'prices' => Filters\Product\PricesFilter::make(),
+            'colors' => Filters\Product\ColorsFilter::make(),
+            'sizes' => Filters\Product\SizesFilter::make(),
         ];
     }
 

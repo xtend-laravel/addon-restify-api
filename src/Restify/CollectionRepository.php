@@ -3,9 +3,9 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Fields\HasMany;
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CollectionPresenter;
 
 class CollectionRepository extends Repository

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Lunar\Base\Purchasable;
 use Lunar\Models\Cart;
-use Lunar\Models\ProductOption;
 use Lunar\Models\ProductVariant;
 
 class UpdateCartAction extends Action
@@ -25,10 +24,10 @@ class UpdateCartAction extends Action
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(function ($line) {
             return [
-                'id'          => $line->purchasable->product_id,
+                'id' => $line->purchasable->product_id,
                 'purchasable' => $line->purchasable,
-                'quantity'    => $line->quantity,
-                'total'       => $line->total->value,
+                'quantity' => $line->quantity,
+                'total' => $line->total->value,
             ];
         }));
     }
@@ -40,7 +39,7 @@ class UpdateCartAction extends Action
         if (blank($variants)) {
             return ProductVariant::query()->where([
                 'product_id' => $product['id'],
-                'base'       => true,
+                'base' => true,
             ])->sole();
         }
 
@@ -48,7 +47,7 @@ class UpdateCartAction extends Action
             ->where(['product_id' => $product['id'], 'base' => false])
             ->get()
             ->first(
-                fn(ProductVariant $variant) => $variant->values->pluck('id')->diff(array_values($product['variants']))->isEmpty()
+                fn (ProductVariant $variant) => $variant->values->pluck('id')->diff(array_values($product['variants']))->isEmpty()
             );
     }
 }

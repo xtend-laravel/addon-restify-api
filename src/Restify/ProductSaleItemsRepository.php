@@ -2,9 +2,9 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
+use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithCustomRoutes;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
-use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\ProductSaleItemsPresenter;
 
 class ProductSaleItemsRepository extends Repository

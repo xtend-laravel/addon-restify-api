@@ -21,10 +21,11 @@ class CategoriesFilter extends MatchFilter
 
         $query->orderByDesc(
             CollectionProduct::select('collection_id')
-                ->whereColumn('product_id', $query->getModel()->getTable() . '.id')
+                ->whereColumn('product_id', $query->getModel()->getTable().'.id')
                 ->whereIn('collection_id', $categoryIds)
                 ->limit(1)
         );
+
         return $query;
     }
 }

@@ -3,12 +3,12 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Fields\FieldCollection;
-use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
-use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithPresenter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
+use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithPresenter;
 
 abstract class Repository extends RestifyRepository
 {
@@ -32,7 +32,6 @@ abstract class Repository extends RestifyRepository
      *
      * @param  RestifyRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function mainQuery(RestifyRequest $request, Builder|Relation $query)
@@ -45,7 +44,6 @@ abstract class Repository extends RestifyRepository
      *
      * @param  RestifyRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function indexQuery(RestifyRequest $request, Builder|Relation $query)
@@ -58,7 +56,6 @@ abstract class Repository extends RestifyRepository
      *
      * @param  RestifyRequest  $request
      * @param  \Illuminate\Database\Eloquent\Builder  $query
-     *
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public static function showQuery(RestifyRequest $request, Builder|Relation $query)

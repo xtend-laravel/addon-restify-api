@@ -2,12 +2,12 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
-use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\Collection;
 use Lunar\Models\Url;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
+use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 
 class ProductRelatedPresenter extends PresenterResource implements Presentable
 {
@@ -33,5 +33,3 @@ class ProductRelatedPresenter extends PresenterResource implements Presentable
         ];
     }
 }
-
-

@@ -2,8 +2,8 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 
 class ProductSaleItemsPresenter extends PresenterResource implements Presentable
 {
@@ -14,12 +14,10 @@ class ProductSaleItemsPresenter extends PresenterResource implements Presentable
             'image' => null,
         ];
 
-        if (!$request->isIndexRequest()) {
+        if (! $request->isIndexRequest()) {
             $response['filters'] = $this->getter($request, 'filter-groups');
         }
 
         return $response;
     }
 }
-
-

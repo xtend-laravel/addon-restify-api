@@ -2,12 +2,12 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
-use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
-use XtendLunar\Addons\RestifyApi\Restify\Presenters\CategoryPresenter;
 use Binaryk\LaravelRestify\Fields\HasMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
+use XtendLunar\Addons\RestifyApi\Restify\Presenters\CategoryPresenter;
 
 class CategoryRepository extends Repository
 {

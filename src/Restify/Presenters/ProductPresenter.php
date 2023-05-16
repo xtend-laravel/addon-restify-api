@@ -2,12 +2,12 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
-use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
-use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\Collection;
 use Lunar\Models\Url;
+use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
+use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
 
 class ProductPresenter extends PresenterResource implements Presentable
 {
@@ -19,6 +19,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             'id' => $this->data['product_id'] ?? $this->data['id'],
             'slug' => $this->repository->resource->urls->first(function (Url $url) {
                 $matchesLocale = $url->language->code === app()->getLocale();
+
                 return $matchesLocale || $url->language->code === config('app.fallback_locale');
             })->slug,
             'name' => $this->repository->resource->translateAttribute('name'),
@@ -39,5 +40,3 @@ class ProductPresenter extends PresenterResource implements Presentable
         ];
     }
 }
-
-

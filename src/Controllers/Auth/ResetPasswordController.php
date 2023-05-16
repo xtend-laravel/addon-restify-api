@@ -20,7 +20,6 @@ class ResetPasswordController extends Controller
         ]);
 
         /** * @var User $user */
-
         $user = User::query()->where($request->only('email'))->firstOrFail();
 
         if (! Password::getRepository()->exists($user, $request->input('token'))) {
@@ -32,6 +31,6 @@ class ResetPasswordController extends Controller
 
         Password::deleteToken($user);
 
-        return data("Password has been successfully changed");
+        return data('Password has been successfully changed');
     }
 }
