@@ -15,7 +15,15 @@ class AddressesResource extends JsonResource
     public function toArray(Request $request)
     {
         return [
-            'message' => 'Addresses',
+            'addresses' => $this->getCustomerAddresses($request),
         ];
+    }
+
+    protected function getCustomerAddresses(Request $request): array
+    {
+        /** @var \Lunar\Models\Customer $customer */
+        $customer = $request->user()?->customers()?->first();
+
+        return $customer ? $customer->addresses->toArray() : [];
     }
 }
