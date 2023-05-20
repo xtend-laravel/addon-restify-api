@@ -21,7 +21,7 @@ class ProductPresenter extends PresenterResource implements Presentable
                 $matchesLocale = $url->language->code === app()->getLocale();
 
                 return $matchesLocale || $url->language->code === config('app.fallback_locale');
-            })->slug,
+            })?->slug,
             'name' => $this->repository->resource->translateAttribute('name'),
             'brand' => $this->data['legacy_data']['manufacturer_name'] ?? '--',
             'primary_category_id' => $this->data['primary_category_id'],
