@@ -27,6 +27,18 @@ class OrderPresenter extends PresenterResource implements Presentable
             // @todo do we format the date on the frontend?
             'created_at' => $this->data->created_at->format('m/d/Y'),
             'addresses' => $this->getAddresses($request),
+            'totals' => $this->getTotals(),
+        ];
+    }
+
+    protected function getTotals()
+    {
+        return [
+            'sub_total' => $this->data->sub_total->value,
+            'shipping_total' => $this->data->shipping_total->value,
+            'discount_total' => $this->data->discount_total->value,
+            'tax_total' => $this->data->tax_total->value,
+            'total' => $this->data->total->value,
         ];
     }
 
