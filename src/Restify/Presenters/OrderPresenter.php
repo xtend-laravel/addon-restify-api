@@ -3,6 +3,7 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\OrderLine;
 use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use XtendLunar\Addons\RestifyApi\Restify\OrderRepository;
@@ -25,6 +26,20 @@ class OrderPresenter extends PresenterResource implements Presentable
             'status' => $this->data->status,
             // @todo do we format the date on the frontend?
             'created_at' => $this->data->created_at->format('m/d/Y'),
+            'addresses' => $this->getAddresses($request),
         ];
+    }
+
+    protected function getAddresses(RestifyRequest $request)
+    {
+        return $this->data->addresses->keyBy('type')
+            ->mapWithKeys(function ($address, $type) use ($request) {
+                return [
+                    $type => OrderAddressPresenter::fromData(
+                        repository: RestifyRepository::resolveWith($address),
+                        data: $address,
+                    )->transform($request),
+                ];
+            });
     }
 }
