@@ -34,8 +34,7 @@ class DashboardResource extends JsonResource
 
     protected function getTotalSpent($orders)
     {
-        // @todo do we use decimal here, or the value and then format it on the frontend?
-        return $orders->sum(fn(Order $order) => $order->total->decimal);
+        return $orders->sum(fn(Order $order) => $order->total->value);
     }
 
     // @todo Addons will be able to append to this array so this will be moved later

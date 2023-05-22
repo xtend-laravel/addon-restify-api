@@ -21,10 +21,7 @@ class OrderPresenter extends PresenterResource implements Presentable
                     data: $line,
                 )->transform($request);
             }),
-            'totals' => [
-                // @todo do we use decimal here, or the value and then format it on the frontend?
-                'total' => $this->data->total->decimal,
-            ],
+            'total' => $this->data->total->value,
             // @todo do we format the date on the frontend?
             'created_at' => $this->data->created_at->format('m/d/Y'),
         ];
