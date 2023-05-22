@@ -25,7 +25,8 @@ class DashboardResource extends JsonResource
             'stats' => [
                 'orders' => $orders->count(),
                 'total_spent' => $this->getTotalSpent($orders),
-                'points_earned' => $this->getPointsEarned($orders),
+                // 'points_earned' => $this->getPointsEarned($orders),
+                'wishlist' => $this->getWishlistData($request->user()),
             ],
             'latest_order' => $this->getLatestOrder($orders->first()),
         ];
@@ -42,6 +43,14 @@ class DashboardResource extends JsonResource
     protected function getPointsEarned($orders)
     {
         return 0;
+    }
+
+    protected function getWishlistData($user)
+    {
+        return [
+            'added_total' => 17,
+            'added_recently' => 7,
+        ];
     }
 
     protected function getLatestOrder(Order $order)

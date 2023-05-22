@@ -27,7 +27,6 @@ class OrderPresenter extends PresenterResource implements Presentable
             ],
             // @todo do we format the date on the frontend?
             'created_at' => $this->data->created_at->format('m/d/Y'),
-            'lines' => ''
         ];
     }
 }
