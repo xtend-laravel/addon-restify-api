@@ -16,10 +16,11 @@ class CustomerRepository extends Repository
     public static function routes(Router $router, $attributes = [], $wrap = true): void
     {
         $router->group(['namespace' => '\XtendLunar\Addons\RestifyApi'], function (Router $router) {
-            $router->get('/account/{section?}', function(string $section = null) {
+            $router->get('/account/{section?}', function (string $section = null) {
                 /** @var JsonResource|string $resource */
-                $resource = 'XtendLunar\Addons\RestifyApi\Resources\Account\\' . ucfirst($section ?? 'Dashboard') . 'Resource';
+                $resource = 'XtendLunar\Addons\RestifyApi\Resources\Customer\\'.ucfirst($section ?? 'Dashboard').'Resource';
                 abort_unless(class_exists($resource), 404);
+
                 return $resource::make(request()->all());
             })->name('account.'.($section ?? 'dashboard'));
         });

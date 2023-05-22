@@ -1,11 +1,11 @@
 <?php
 
-namespace XtendLunar\Addons\RestifyApi\Resources\Account;
+namespace XtendLunar\Addons\RestifyApi\Resources\Customer;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WishlistResource extends JsonResource
+class OrdersResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +15,7 @@ class WishlistResource extends JsonResource
     public function toArray(Request $request)
     {
         return [
-            'message' => 'Wishlist',
+            'message' => 'Orders',
         ];
     }
 }
