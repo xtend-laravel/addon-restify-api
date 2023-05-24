@@ -28,6 +28,8 @@ class OrderResource extends JsonResource
 
     protected function getOrder(Request $request): Order
     {
-        return $request->user()->orders()->whereId($request->id)->firstOrFail();
+        return $request->user()->orders()
+            ->whereId($request->route('order'))
+            ->firstOrFail();
     }
 }
