@@ -4,11 +4,13 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Actions;
 
 use Binaryk\LaravelRestify\Actions\Action;
 use Binaryk\LaravelRestify\Http\Requests\ActionRequest;
+use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Lunar\Base\Purchasable;
 use Lunar\Models\Cart;
 use Lunar\Models\ProductVariant;
+use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class UpdateCartAction extends Action
 {
@@ -22,14 +24,12 @@ class UpdateCartAction extends Action
         )->calculate();
 
         // @todo return any validation stock errors or any other errors when adding lines to cart
-        return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(function ($line) {
-            return [
-                'id' => $line->purchasable->product_id,
-                'purchasable' => $line->purchasable,
-                'quantity' => $line->quantity,
-                'total' => $line->total->value,
-            ];
-        }));
+        return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
+            fn($line) => CartLinePresenter::fromData(
+                repository: RestifyRepository::resolveWith($cart),
+                data: $line,
+            )->transform($request)
+        ));
     }
 
     protected function getPurchasable(array $product): Purchasable|Model
