@@ -26,6 +26,7 @@ class OrderPresenter extends PresenterResource implements Presentable
             'status' => $this->data->status,
             // @todo do we format the date on the frontend?
             'created_at' => $this->data->created_at->format('m/d/Y'),
+            'updated_at' => $this->data->updated_at->format('m/d/Y'),
             'addresses' => $this->getAddresses($request),
             'totals' => $this->getTotals(),
         ];
