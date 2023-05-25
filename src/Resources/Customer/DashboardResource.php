@@ -19,7 +19,7 @@ class DashboardResource extends JsonResource
     public function toArray(Request $request)
     {
         /** @var Order[] $orders */
-        $orders = $request->user()->orders()->get();
+        $orders = $request->user()->orders()->latest()->get();
 
         return [
             'stats' => [
@@ -28,13 +28,13 @@ class DashboardResource extends JsonResource
                 // 'points_earned' => $this->getPointsEarned($orders),
                 'wishlist' => $this->getWishlistData($request->user()),
             ],
-            'latest_order' => $this->getLatestOrder($orders->first()),
+            'latest_order' => $orders->count() ? $this->getLatestOrder($orders->first()) : null,
         ];
     }
 
     protected function getTotalSpent($orders)
     {
-        return $orders->sum(fn(Order $order) => $order->total->value);
+        return $orders->sum(fn (Order $order) => $order->total->value);
     }
 
     // @todo Addons will be able to append to this array so this will be moved later
