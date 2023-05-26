@@ -13,7 +13,7 @@ class UserPresenter extends PresenterResource implements Presentable
         $customer = $this->repository->resource->customers->first();
 
         return [
-            'id' => $this->data['id'],
+            'id' => $this->data['id'] ?? null,
             'language_id' => $customer->language_id,
             'email' => $this->data['email'],
             'title' => $customer->title,
