@@ -24,18 +24,24 @@ class ItemsCollectionGetter extends Getter
         $requestParams = json_decode($request->params, true);
         $widgetParams['collection_id'] = $requestParams['collectionId'] ?? $widgetParams['collection_id'];
 
-        if ($widgetParams['collection_id'] === null) {
+        /** @var \Illuminate\Support\Collection $collection */
+        $collections = Collection::find($widgetParams['collection_id'])->collect();
+        if ($collections->isEmpty()) {
             return response()->json([
                 'data' => [],
             ]);
         }
 
-        $collection = Collection::find($widgetParams['collection_id']);
+        return $this->productsResponse($request, $collections, $widgetParams);
+    }
 
-        return response()->json([
-            'data' => $collection
+    protected function productsResponse(RestifyRequest $request, \Illuminate\Support\Collection $collections, array $widgetParams): JsonResponse
+    {
+        $products = $collections->map(function (Collection $collection) use ($request, $widgetParams) {
+            return $collection
                 ->products()
                 ->where('status', 'published')
+                ->where('stock', '>', 0)
                 ->limit($widgetParams['limit'])
                 ->get()
                 ->collect()
@@ -44,7 +50,11 @@ class ItemsCollectionGetter extends Getter
                         repository: ProductRepository::resolveWith($product),
                         data: $product,
                     )->transform($request),
-                ),
+                );
+        })->flatten(1);
+
+        return response()->json([
+            'data' => $products,
         ]);
     }
 }
