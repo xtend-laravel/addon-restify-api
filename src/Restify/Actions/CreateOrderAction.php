@@ -9,11 +9,18 @@ use Illuminate\Http\JsonResponse;
 use Lunar\Models\Cart;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\OrderPresenter;
 
-class PlaceOrderAction extends Action
+class CreateOrderAction extends Action
 {
     public function handle(ActionRequest $request, Cart $cart): JsonResponse
     {
-        $order = $cart->createOrder();
+        // @todo Replace this with our implementation
+        try {
+            $order = $cart->createOrder();
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        }
 
         return data(OrderPresenter::fromData(
                 repository: RestifyRepository::resolveWith($order),
