@@ -25,7 +25,11 @@ class ItemsCollectionGetter extends Getter
         $widgetParams['collection_id'] = $requestParams['collectionId'] ?? $widgetParams['collection_id'];
 
         /** @var \Illuminate\Support\Collection $collection */
-        $collections = Collection::find($widgetParams['collection_id'])->collect();
+        if (is_string($widgetParams['collection_id'])) {
+            $widgetParams['collection_id'] = [$widgetParams['collection_id']];
+        }
+        
+        $collections = Collection::find($widgetParams['collection_id']);
         if ($collections->isEmpty()) {
             return response()->json([
                 'data' => [],
