@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Support\Facades\DB;
 use Lunar\Models\Address;
+use Lunar\Models\Country;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\AddressPresenter;
 
@@ -25,5 +26,17 @@ class AddressRepository extends Repository
         static::deleted($status, $request);
 
         return ok(code: 204);
+    }
+
+    public function update(RestifyRequest $request, $repositoryId)
+    {
+        $country = Country::firstWhere('name', $request->input('country'));
+
+        $this->resource->update(
+            $request->validated()+
+            ['country_id' => $country?->id]
+        );
+
+        return ok();
     }
 }
