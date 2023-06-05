@@ -12,10 +12,11 @@ use Lunar\Models\Cart;
 use Lunar\Models\ProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
-class UpdateCartAction extends Action
+class AddToCartAction extends Action
 {
-    public function handle(ActionRequest $request, Cart $cart): JsonResponse
+    public function handle(ActionRequest $request, Cart $models): JsonResponse
     {
+        $cart = $models;
         $purchasable = $this->getPurchasable($request->product);
 
         $cart->add(

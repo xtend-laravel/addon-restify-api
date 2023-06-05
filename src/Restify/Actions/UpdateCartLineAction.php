@@ -6,13 +6,16 @@ use Binaryk\LaravelRestify\Actions\Action;
 use Illuminate\Http\Request;
 use Lunar\Models\Cart;
 
-class RemoveLineAction extends Action
+class UpdateCartLineAction extends Action
 {
     public function handle(Request $request, Cart $models): \Illuminate\Http\JsonResponse
     {
         $cart = $models;
 
-        $cart->remove($request->input('lineId'))->calculate();
+        $cart->updateLine(
+            cartLineId: $request->lineId,
+            quantity: $request->quantity,
+        );
 
         return ok();
     }

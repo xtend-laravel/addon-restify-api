@@ -20,7 +20,7 @@ class OrderAddressPresenter extends PresenterResource implements Presentable
             'city' => $this->data->city,
             'state' => $this->data->state,
             'postcode' => $this->data->postcode,
-            'country' => $this->data->country->name,
+            'country' => $this->data->country->name ?? '--',
             'contact_email' => $this->data->contact_email,
             'contact_phone' => $this->data->contact_phone,
         ];

@@ -16,6 +16,8 @@ class AddressesResource extends JsonResource
     {
         return [
             'addresses' => $this->getCustomerAddresses($request),
+            'shipping_address' => [],
+            'billing_address' => [],
         ];
     }
 

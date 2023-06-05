@@ -31,7 +31,7 @@ class CurrentCartGetter extends Getter
             'cart' => [
                 'id' => $cart->id,
                 'lastAddedLineId' => $cart->lines()->latest('updated_at')->first()?->id,
-                'products' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
+                'lineItems' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
                     $line->purchasable->load('values.option');
 
                     return CartLinePresenter::fromData(

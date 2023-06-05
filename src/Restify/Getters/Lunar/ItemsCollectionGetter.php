@@ -28,7 +28,7 @@ class ItemsCollectionGetter extends Getter
         if (is_string($widgetParams['collection_id'])) {
             $widgetParams['collection_id'] = [$widgetParams['collection_id']];
         }
-        
+
         $collections = Collection::find($widgetParams['collection_id']);
         if ($collections->isEmpty()) {
             return response()->json([
