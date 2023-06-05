@@ -18,11 +18,14 @@ class AddToCartAction extends Action
     {
         $cart = $models;
         $purchasable = $this->getPurchasable($request->product);
+        dump($purchasable, $request->toArray());
 
         $cart->add(
             purchasable: $purchasable,
             quantity: $request->product['quantity'] ?? 1,
         )->calculate();
+
+        dump('lines', $cart->lines->toArray());
 
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
