@@ -26,6 +26,8 @@ class CurrentCartGetter extends Getter
             'channel_id' => Channel::getDefault()->id,
             'user_id' => $request->userId ?? null,
         ])->calculate();
+        
+        dump($request->all());
 
         return data([
             'cart' => [
