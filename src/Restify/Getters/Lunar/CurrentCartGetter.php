@@ -19,7 +19,6 @@ class CurrentCartGetter extends Getter
 
     public function handle(GetterRequest $request): JsonResponse
     {
-        Blink::flush();
         /** @var Cart $cart */
         $cart = Cart::query()->firstOrCreate([
             'session_id' => $request->sessionId,
@@ -28,6 +27,12 @@ class CurrentCartGetter extends Getter
             'channel_id' => Channel::getDefault()->id,
             'user_id' => $request->userId ?? null,
         ])->refresh()->calculate();
+
+        if ($cart->total->value === 0) {
+            Blink::flush();
+            $cart->refresh()->calculate();
+            dump($cart->total->value);
+        }
 
         return data([
             'cart' => [
