@@ -19,7 +19,6 @@ class AddToCartAction extends Action
     {
         $cart = $models;
         $purchasable = $this->getPurchasable($request->product);
-        Blink::flush();
 
         $cart->add(
             purchasable: $purchasable,

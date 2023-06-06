@@ -28,11 +28,6 @@ class CurrentCartGetter extends Getter
             'user_id' => $request->userId ?? null,
         ])->refresh()->calculate();
 
-        if ($cart->total->value === 0) {
-            Blink::flush();
-            $cart->refresh()->calculate();
-        }
-
         return data([
             'cart' => [
                 'id' => $cart->id,
