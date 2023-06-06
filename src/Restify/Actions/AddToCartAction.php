@@ -25,7 +25,7 @@ class AddToCartAction extends Action
             $cart->add(
                 purchasable: $purchasable,
                 quantity: $request->product['quantity'] ?? 1,
-            )->calculate();
+            )->refresh()->calculate();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),

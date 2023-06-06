@@ -13,7 +13,7 @@ class DeleteCartLineAction extends Action
         $cart = $models;
 
         try {
-            $cart->remove($request->input('lineId'))->calculate();
+            $cart->remove($request->input('lineId'))->refresh()->calculate();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
