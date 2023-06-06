@@ -10,6 +10,7 @@ use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
 use Lunar\Models\Currency;
+use Spatie\LaravelBlink\BlinkFacade as Blink;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class CurrentCartGetter extends Getter
@@ -18,6 +19,7 @@ class CurrentCartGetter extends Getter
 
     public function handle(GetterRequest $request): JsonResponse
     {
+        Blink::flush();
         /** @var Cart $cart */
         $cart = Cart::query()->firstOrCreate([
             'session_id' => $request->sessionId,

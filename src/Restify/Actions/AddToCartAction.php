@@ -9,9 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Lunar\Base\Purchasable;
 use Lunar\Models\Cart;
-use Lunar\Models\Channel;
-use Lunar\Models\Currency;
 use Lunar\Models\ProductVariant;
+use Spatie\LaravelBlink\BlinkFacade as Blink;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class AddToCartAction extends Action
@@ -20,17 +19,12 @@ class AddToCartAction extends Action
     {
         $cart = $models;
         $purchasable = $this->getPurchasable($request->product);
+        Blink::flush();
 
-        try {
-            $cart->add(
-                purchasable: $purchasable,
-                quantity: $request->product['quantity'] ?? 1,
-            )->refresh()->calculate();
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
-        }
+        $cart->add(
+            purchasable: $purchasable,
+            quantity: $request->product['quantity'] ?? 1,
+        )->refresh()->calculate();
 
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
