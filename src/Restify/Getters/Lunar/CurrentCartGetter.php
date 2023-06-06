@@ -6,10 +6,12 @@ use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pipeline\Pipeline;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
 use Lunar\Models\Currency;
+use Lunar\Pipelines\Cart\Calculate;
 use Spatie\LaravelBlink\BlinkFacade as Blink;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
@@ -26,7 +28,16 @@ class CurrentCartGetter extends Getter
             'currency_id' => Currency::getDefault()->id,
             'channel_id' => Channel::getDefault()->id,
             'user_id' => $request->userId ?? null,
-        ])->refresh()->calculate();
+        ]);
+
+        // Custom cart pipeline
+        $cart = app(Pipeline::class)
+            ->send($cart)
+            ->through(
+                config('lunar.cart.pipelines.cart', [
+                    Calculate::class,
+                ])
+            )->thenReturn();
 
         return data([
             'cart' => [
