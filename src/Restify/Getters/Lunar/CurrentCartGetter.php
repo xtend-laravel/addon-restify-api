@@ -31,7 +31,6 @@ class CurrentCartGetter extends Getter
         if ($cart->total->value === 0) {
             Blink::flush();
             $cart->refresh()->calculate();
-            dump($cart->total->value);
         }
 
         return data([
