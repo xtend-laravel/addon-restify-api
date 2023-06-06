@@ -37,6 +37,7 @@ class FilterGroupsGetter extends Getter
         $this->model = $model;
         $request = $request->merge([
             'repositoryUri' => $this->model->uriKey(),
+            'repositoryId' => $this->model->id ?? null,
         ]);
 
         if ($model instanceof BrandRepository) {
