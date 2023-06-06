@@ -19,13 +19,9 @@ class CurrentCartGetter extends Getter
     public function handle(GetterRequest $request): JsonResponse
     {
         /** @var Cart $cart */
-        $cart = Cart::query()->firstOrCreate([
-            'session_id' => $request->sessionId,
-        ], [
-            'currency_id' => Currency::getDefault()->id,
-            'channel_id' => Channel::getDefault()->id,
-            'user_id' => $request->userId ?? null,
-        ])->refresh()->calculate();
+        $cart = $request->has('cartId')
+            ? Cart::query()->findOrFail($request->cartId)->refresh()->calculate()
+            : $this->getCartFromSession($request);
 
         return data([
             'cart' => [
@@ -49,5 +45,16 @@ class CurrentCartGetter extends Getter
                 'meta' => $cart->meta,
             ],
         ]);
+    }
+
+    protected function getCartFromSession(GetterRequest $request): Cart
+    {
+        return Cart::query()->firstOrCreate([
+            'session_id' => $request->sessionId,
+        ], [
+            'currency_id' => Currency::getDefault()->id,
+            'channel_id' => Channel::getDefault()->id,
+            'user_id' => $request->userId ?? null,
+        ])->refresh()->calculate();
     }
 }
