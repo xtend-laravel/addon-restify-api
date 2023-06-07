@@ -16,6 +16,8 @@ class UpdateCartAddressAction extends Action
 
         try {
             $cart->addAddress($address, $request->type);
+            $cart->{$request->type . '_address_id'} = $address->id;
+            $cart->save();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
