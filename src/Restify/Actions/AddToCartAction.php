@@ -46,7 +46,7 @@ class AddToCartAction extends Action
         }
 
         return ProductVariant::query()
-            ->where(['product_id' => $product['id'], 'base' => false])
+            ->where(['product_id' => $product['id']])
             ->get()
             ->first(
                 fn (ProductVariant $variant) => $variant->values->pluck('id')->diff(array_values($product['variants']))->isEmpty()
