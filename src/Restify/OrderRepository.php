@@ -21,13 +21,6 @@ class OrderRepository extends Repository
         ];
     }
 
-    public function fields(RestifyRequest $request): array
-    {
-        return $this->getDefaultFields(
-            exclude: ['_lft', '_rgt'],
-        );
-    }
-
     public function getters(RestifyRequest $request): array
     {
         return [
