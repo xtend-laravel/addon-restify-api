@@ -135,6 +135,11 @@ class FilterGroupsGetter extends Getter
 
         $sizeOption = ProductOption::where('handle', 'size')->first();
         $colorOption = ProductOption::where('handle', 'color')->first();
+
+        if (!$sizeOption || !$colorOption) {
+            return [];
+        }
+
         $productIds = $this->productQuery->pluck('id');
         $variants = ProductVariant::query()->select('id')->where('stock', '>', 0)->whereIntegerInRaw('product_id', $productIds)->get();
         $variantIds = $variants->pluck('id');
