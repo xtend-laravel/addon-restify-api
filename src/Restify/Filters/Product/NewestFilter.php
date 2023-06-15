@@ -14,7 +14,7 @@ class NewestFilter extends MatchFilter
     public function filter(RestifyRequest $request, Relation|Builder $query, $value)
     {
         if ($value) {
-            $query->where('created_at', '>=', now()->subDays(30))->latest();
+            $query->where('created_at', '>=', now()->subDays(90))->latest();
         }
 
         return $query;

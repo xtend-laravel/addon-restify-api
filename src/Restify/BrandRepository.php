@@ -3,6 +3,8 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Lunar\Models\Brand;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
@@ -17,6 +19,8 @@ class BrandRepository extends Repository
     public static bool|array $public = true;
 
     public static int $defaultPerPage = 500;
+
+    public static array $sort = ['name'];
 
     public function getters(RestifyRequest $request): array
     {

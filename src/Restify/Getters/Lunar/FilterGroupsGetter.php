@@ -54,7 +54,7 @@ class FilterGroupsGetter extends Getter
         if ($model instanceof ProductNewItemsRepository || $model instanceof ProductSaleItemsRepository) {
             return data([
                 'groups' => [
-                    //'categories' => $this->getCategories($request),
+                    //'categories' => CategoryResource::make(\Xtend\Extensions\Lunar\Core\Models\Collection::find(1), $request),
                     'brands' => $this->getBrands($request),
                     'price' => $this->getPriceFilter($request),
                     'options' => $this->getOptions($request),

@@ -21,9 +21,9 @@ class UserPresenter extends PresenterResource implements Presentable
             'last_name' => $customer->last_name,
             'company_name' => $customer->company_name,
             'meta' => [
-                'birth_data' => $customer->meta['birth_data'] ?? null,
-                'newsletter' => $customer->meta['newsletter'] ?? false,
-                'terms' => $customer->meta['terms'] ?? false,
+                'birth_data' => $customer?->meta['birth_data'] ?? null,
+                'newsletter' => $customer?->meta['newsletter'] ?? false,
+                'terms' => $customer?->meta['terms'] ?? false,
             ],
         ];
     }
