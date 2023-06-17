@@ -38,6 +38,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             //'related_items' => $this->getter($request, 'product-related-items'),
             'legacy_data' => $this->data['legacy_data'] ?? [],
             'stock' => $this->data['stock'] ?? 0,
+            'isNew' => $this->data['created_at']->diffInDays(now()) <= 90,
         ];
     }
 }
