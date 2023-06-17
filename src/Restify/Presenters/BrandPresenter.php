@@ -12,7 +12,7 @@ class BrandPresenter extends PresenterResource implements Presentable
         $response = [
             'id' => $this->data['id'],
             'name' => $this->data['name'],
-            'image' => $this->repository->model()->getFirstMediaUrl('brands'),
+            'image' => $this->repository->model()->getFirstMediaUrl('brands', 'small'),
         ];
 
         if (! $request->isIndexRequest()) {
