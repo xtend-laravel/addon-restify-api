@@ -15,19 +15,31 @@ class CategoryResource extends JsonResource
      */
     public function toArray(Request $request)
     {
-        $countQuery = $this->publishedProducts()->where('stock', '>', 0);
-        if ($request->repositoryUri === 'brands') {
-            $countQuery = $countQuery->where('brand_id', $request->repositoryId);
-        }
-
         return [
             'id' => $this->id,
             'active' => (bool) ($this->legacy_data['active'] ?? true),
             'name' => $this->resource->translateAttribute('name') ?? null,
-            'count' => $countQuery->count(),
-            'children' => $request->repositoryUri !== 'brands' ? CategoryResource::collection(
+            'count' => $this->getCount($request),
+            'children' => CategoryResource::collection(
                 resource: $this->children->filter(fn (Collection $category) => $category->legacy_data['active'] ?? true),
-            ) : null,
+            ),
         ];
+    }
+
+    protected function getCount(Request $request): int
+    {
+        $countQuery = $this->publishedProducts()->where('stock', '>', 0);
+
+        match ($request->route()->getName()) {
+            'new-products' => $countQuery = $countQuery->where('lunar_products.created_at', '>=', now()->subDays(90))->latest(),
+            'sales' => $countQuery = $countQuery->where('legacy_data->reduction_amount', '>', 0),
+            default => '',
+        };
+
+        if ($request->repositoryUri === 'brands') {
+            $countQuery = $countQuery->where('brand_id', $request->repositoryId);
+        }
+
+        return $countQuery->count();
     }
 }

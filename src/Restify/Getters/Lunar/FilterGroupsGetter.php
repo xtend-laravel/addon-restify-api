@@ -43,7 +43,7 @@ class FilterGroupsGetter extends Getter
         if ($model instanceof BrandRepository) {
             return data([
                 'groups' => [
-                    'categories' => $this->getCategories($request),
+                    'categories' => CategoryResource::make(\Lunar\Models\Collection::find(1), $request),
                     'brands' => $this->getBrands($request),
                     'price' => $this->getPriceFilter($request),
                     'options' => $this->getOptions($request),
@@ -52,9 +52,12 @@ class FilterGroupsGetter extends Getter
         }
 
         if ($model instanceof ProductNewItemsRepository || $model instanceof ProductSaleItemsRepository) {
+            $request = $request->merge([
+                'repositoryUri' => $model instanceof ProductNewItemsRepository ? 'new-items' : 'sale-items',
+            ]);
             return data([
                 'groups' => [
-                    //'categories' => CategoryResource::make(\Xtend\Extensions\Lunar\Core\Models\Collection::find(1), $request),
+                    'categories' => CategoryResource::make(\Lunar\Models\Collection::find(1), $request),
                     'brands' => $this->getBrands($request),
                     'price' => $this->getPriceFilter($request),
                     'options' => $this->getOptions($request),
@@ -75,12 +78,14 @@ class FilterGroupsGetter extends Getter
     protected function getCategories(RestifyRequest $request): Collection
     {
         $this->interceptRequest($request, 'categories');
-        $categories = $this->productQuery->pluck('primary_category_id')->unique();
+        $categories = $this->productQuery->pluck('primary_category_id')->unique()->filter();
 
-        return $categories->map(fn ($categoryId) => CategoryResource::make(
-            \Lunar\Models\Collection::find($categoryId),
+        $availableCategories = $categories->map(fn ($categoryId) => CategoryResource::make(
+            \Lunar\Models\Collection::findOrFail($categoryId),
             $request,
-        ))->values();
+        )->toArray($request))->values();
+
+        return $availableCategories;
     }
 
     protected function getBrands(RestifyRequest $request): array
