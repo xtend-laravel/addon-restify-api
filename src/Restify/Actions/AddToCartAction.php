@@ -10,7 +10,6 @@ use Illuminate\Http\JsonResponse;
 use Lunar\Base\Purchasable;
 use Lunar\Models\Cart;
 use Lunar\Models\ProductVariant;
-use Spatie\LaravelBlink\BlinkFacade as Blink;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class AddToCartAction extends Action
@@ -46,7 +45,10 @@ class AddToCartAction extends Action
         }
 
         return ProductVariant::query()
-            ->where(['product_id' => $product['id']])
+            ->where([
+                'product_id' => $product['id'],
+                'base' => false,
+            ])
             ->get()
             ->first(
                 fn (ProductVariant $variant) => $variant->values->pluck('id')->diff(array_values($product['variants']))->isEmpty()
