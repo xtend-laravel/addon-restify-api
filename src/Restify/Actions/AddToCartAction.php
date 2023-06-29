@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Lunar\Base\Purchasable;
 use Lunar\Models\Cart;
+use Lunar\Models\CartLine;
 use Lunar\Models\ProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
@@ -26,10 +27,13 @@ class AddToCartAction extends Action
 
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
-            fn($line) => CartLinePresenter::fromData(
-                repository: RestifyRepository::resolveWith($cart),
-                data: $line,
-            )->transform($request)
+            function (CartLine $line) use ($cart, $request) {
+                $line->purchasable->load('values.option');
+                return CartLinePresenter::fromData(
+                    repository: RestifyRepository::resolveWith($cart),
+                    data: $line,
+                )->transform($request);
+            }
         ));
     }
 
