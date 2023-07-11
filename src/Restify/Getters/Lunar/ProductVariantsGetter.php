@@ -60,6 +60,9 @@ class ProductVariantsGetter extends Getter
             'name' => $productOptionValue->name,
             'price' => $productOptionValue->price,
             'color' => $productOptionValue->color ?? null,
+            'primary_color' => $productOptionValue->primary_color ?? null,
+            'secondary_color' => $productOptionValue->secondary_color ?? null,
+            'tertiary_color' => $productOptionValue->tertiary_color ?? null,
             'image' => $productVariant->images?->first()?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
             'stock' => $productOptionValue->product_option_id !== 2 ? $productVariant->stock : 999999,
         ];
