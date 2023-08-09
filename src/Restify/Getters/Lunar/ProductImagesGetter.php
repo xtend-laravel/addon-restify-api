@@ -25,7 +25,7 @@ class ProductImagesGetter extends Getter
         // however, the following line may throw an exception when $product is null
 
         // @todo optimise images size later + hack for jacquesloup until sync new catalog
-        $size = str_contains($product?->thumbnail?->getUrl(), 'fra1.digitaloceanspaces') ? 'medium' : '';
+        $size = str_contains($product?->thumbnail?->getUrl(), 'fra1.digitaloceanspaces') ? 'medium' : 'large';
 
         return response()->json([
             'thumbnail' => $product?->thumbnail?->getUrl($size) ?? null,
