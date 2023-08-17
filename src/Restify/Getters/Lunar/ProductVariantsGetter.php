@@ -50,7 +50,7 @@ class ProductVariantsGetter extends Getter
     {
         $group = ProductOption::find($key);
 
-        return Str::slug($group->translate('name'));
+        return Str::slug($group->translate('name', 'en'));
     }
 
     protected function getVariantOption(ProductOptionValue $productOptionValue, ProductVariant $productVariant): array
