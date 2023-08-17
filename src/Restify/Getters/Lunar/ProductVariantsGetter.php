@@ -65,6 +65,7 @@ class ProductVariantsGetter extends Getter
             'tertiary_color' => $productOptionValue->tertiary_color ?? null,
             'image' => $productVariant->images?->first()?->getUrl() ?? $productVariant->product->thumbnail?->getUrl(),
             'stock' => $productOptionValue->product_option_id !== 2 ? $productVariant->stock : 999999,
+            'sku' => $productVariant->sku,
         ];
     }
 }
