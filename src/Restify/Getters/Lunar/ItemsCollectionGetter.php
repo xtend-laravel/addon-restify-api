@@ -45,6 +45,7 @@ class ItemsCollectionGetter extends Getter
             return $collection
                 ->products()
                 ->where('status', 'published')
+                ->where('stock', '>', 0)
                 ->limit($widgetParams['limit'])
                 ->get()
                 ->collect()
