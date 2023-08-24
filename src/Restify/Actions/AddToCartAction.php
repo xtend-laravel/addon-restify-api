@@ -51,7 +51,6 @@ class AddToCartAction extends Action
         return ProductVariant::query()
             ->where([
                 'product_id' => $product['id'],
-                'base' => false,
             ])
             ->get()
             ->first(
