@@ -53,10 +53,9 @@ trait InteractsWithDefaultFields
                     ? fn () => $this->translateFields()
                     : null;
                 $field = field($key, $callback);
-                if (collect($this->model()->getCasts())->keys()->contains($key)) {
-                    $field = $field->readOnly();
-                }
-
+                //if (collect($this->model()->getCasts())->keys()->contains($key)) {
+                //    $field = $field->readOnly();
+                //}
                 return [$key => $field];
             })->toArray();
     }

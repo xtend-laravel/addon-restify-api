@@ -2,8 +2,11 @@
 
 namespace XtendLunar\Addons\RestifyApi;
 
+use Binaryk\LaravelRestify\Bootstrap\RoutesBoot;
 use Binaryk\LaravelRestify\RestifyApplicationServiceProvider;
 use Binaryk\LaravelRestify\Traits\InteractsWithRestifyRepositories;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +18,7 @@ use Lunar\Models\Customer;
 use Lunar\Models\Order;
 use Lunar\Models\Product;
 use XtendLunar\Addons\RestifyApi\Middleware\LanguageMiddleware;
+use XtendLunar\Addons\RestifyApi\Middleware\RestifyInjector;
 use XtendLunar\Addons\RestifyApi\Policies\AddressPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\BrandPolicy;
 use XtendLunar\Addons\RestifyApi\Policies\CartPolicy;
@@ -76,6 +80,21 @@ class RestifyApiProvider extends RestifyApplicationServiceProvider
         Gate::define('viewRestify', function ($user = null) {
             return true;
         });
+    }
+
+    protected function routes(): void
+    {
+        /**
+         * @var Kernel $kernel
+         */
+        $kernel = $this->app->make(Kernel::class);
+
+        $kernel->pushMiddleware(RestifyInjector::class);
+
+        // List routes when running artisan route:list
+        if (App::runningInConsole() && ! App::runningUnitTests()) {
+            app(RoutesBoot::class)->boot();
+        }
     }
 
     protected function registerPolicies()
