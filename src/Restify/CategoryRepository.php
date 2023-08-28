@@ -7,6 +7,7 @@ use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\ShopStyleCollectionGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\CategoryPresenter;
 
 class CategoryRepository extends Repository
@@ -32,6 +33,7 @@ class CategoryRepository extends Repository
         return [
             FilterGroupsGetter::make(),
             CategoriesTreeGetter::make(),
+            ShopStyleCollectionGetter::make(),
         ];
     }
 }
