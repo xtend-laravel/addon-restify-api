@@ -23,6 +23,7 @@ class CategoryResource extends JsonResource
             'children' => CategoryResource::collection(
                 resource: $this->children->filter(fn (Collection $category) => $category->legacy_data['active'] ?? true),
             ),
+            'thumbnail_src' => $this->resource->thumbnail?->getFullUrl(),
         ];
     }
 
