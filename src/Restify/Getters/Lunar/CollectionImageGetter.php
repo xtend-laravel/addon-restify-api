@@ -18,6 +18,7 @@ class CollectionImageGetter extends Getter
     ): JsonResponse {
         return response()->json([
             'main' => $repository->model()->thumbnail?->getUrl() ?? null,
+            'gallery' => $repository->model()->getMedia('images')->map(fn ($image) => $image->getUrl()),
         ]);
     }
 }
