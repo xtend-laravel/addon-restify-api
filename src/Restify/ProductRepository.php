@@ -71,7 +71,6 @@ class ProductRepository extends Repository
         return [
             BelongsToMany::make('collections', CategoryRepository::class),
             BelongsTo::make('primaryCategory', CategoryRepository::class),
-            HasMany::make('variants', ProductVariantRepository::class),
         ];
     }
 
