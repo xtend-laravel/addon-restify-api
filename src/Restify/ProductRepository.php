@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Fields\BelongsTo;
 use Binaryk\LaravelRestify\Fields\BelongsToMany;
+use Binaryk\LaravelRestify\Fields\HasMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -70,6 +71,7 @@ class ProductRepository extends Repository
         return [
             BelongsToMany::make('collections', CategoryRepository::class),
             BelongsTo::make('primaryCategory', CategoryRepository::class),
+            HasMany::make('variants', ProductVariantRepository::class),
         ];
     }
 
@@ -81,6 +83,7 @@ class ProductRepository extends Repository
             Lunar\ProductVariantsGetter::new()->onlyOnShow(),
             Lunar\ProductFeaturesGetter::new()->onlyOnShow(),
             //Lunar\ProductRelatedItemsGetter::new()->onlyOnShow(),
+            Lunar\ProductVariantGetter::new(),
         ];
     }
 }
