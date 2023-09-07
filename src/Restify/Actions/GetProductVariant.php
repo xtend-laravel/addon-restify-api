@@ -7,6 +7,7 @@ use Binaryk\LaravelRestify\Http\Requests\ActionRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Lunar\Models\Product;
+use Lunar\Models\ProductVariant;
 
 class GetProductVariant extends Action
 {
@@ -27,6 +28,7 @@ class GetProductVariant extends Action
         }
 
         $prefix = config('lunar.database.table_prefix');
+        /** @var \Xtend\Extensions\Lunar\Core\Models\ProductVariant $variant */
         $variant = $product->variants()
             ->select("{$prefix}product_variants.*")
             ->join("{$prefix}product_option_value_product_variant as vov", "vov.variant_id", "=", "{$prefix}product_variants.id")
@@ -36,12 +38,14 @@ class GetProductVariant extends Action
             ->having(DB::raw("count(distinct ov.id)"), count($valueIds))
             ->firstOrFail();
 
+        $images = $variant->images->map(fn($image) => $image->getUrl());
+
         return response()->json([
             'data' => [
                 'id'     => $variant->id,
                 'stock'  => $variant->stock,
                 'sku'    => $variant->sku,
-                'images' => $variant->images->map(fn($image) => $image->getUrl()),
+                'images' => !blank($images) ? $images : [$variant->getThumbnail()->getUrl()],
                 'price'  => $variant->basePrices()->first()?->price->value,
             ]
         ]);
