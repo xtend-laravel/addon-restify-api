@@ -37,11 +37,13 @@ class GetProductVariant extends Action
             ->firstOrFail();
 
         return response()->json([
-            'id'     => $variant->id,
-            'stock'  => $variant->stock,
-            'sku'    => $variant->sku,
-            'images' => $variant->images->map(fn($image) => $image->getUrl()),
-            'price'  => $variant->basePrices()->first()?->price->value,
+            'data' => [
+                'id'     => $variant->id,
+                'stock'  => $variant->stock,
+                'sku'    => $variant->sku,
+                'images' => $variant->images->map(fn($image) => $image->getUrl()),
+                'price'  => $variant->basePrices()->first()?->price->value,
+            ]
         ]);
     }
 }
