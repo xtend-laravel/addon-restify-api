@@ -8,8 +8,11 @@ use Binaryk\LaravelRestify\Fields\HasMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Lunar\Models\Price;
 use Xtend\Extensions\Lunar\Core\Models\Product;
+use XtendLunar\Addons\RestifyApi\Restify\Actions\GetProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\ProductPresenter;
 
@@ -82,7 +85,13 @@ class ProductRepository extends Repository
             Lunar\ProductVariantsGetter::new()->onlyOnShow(),
             Lunar\ProductFeaturesGetter::new()->onlyOnShow(),
             //Lunar\ProductRelatedItemsGetter::new()->onlyOnShow(),
-            Lunar\ProductVariantGetter::new(),
+        ];
+    }
+
+    public function actions(RestifyRequest $request): array
+    {
+        return [
+            GetProductVariant::make()->onlyOnShow()
         ];
     }
 }
