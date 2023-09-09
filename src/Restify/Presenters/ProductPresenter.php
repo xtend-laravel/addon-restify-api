@@ -39,6 +39,17 @@ class ProductPresenter extends PresenterResource implements Presentable
             'legacy_data' => $this->data['legacy_data'] ?? [],
             'stock' => $this->data['stock'] ?? 0,
             'isNew' => $this->data['created_at']->diffInDays(now()) <= 90,
+            'collections' => $this->repository->collections->map(fn (Collection $collection) => [
+                'id' => $collection->id,
+                'collection_group_id' => $collection->collection_group_id,
+                'name' => $collection->translateAttribute('name'),
+                'slug' => $collection->urls->first(function (Url $url) {
+                    $matchesLocale = $url->language->code === app()->getLocale();
+
+                    return $matchesLocale || $url->language->code === config('app.fallback_locale');
+                })?->slug,
+            ]),
+            'sku' => $this->data['sku'] ?? '--',
         ];
     }
 }
