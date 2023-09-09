@@ -16,7 +16,7 @@ class ShopStyleCollectionGetter extends Getter
 
     public function handle(RestifyRequest $request, ?Model $model = null): JsonResponse|Response
     {
-        $styleGroup = CollectionGroup::where('handle', 'style')->first();
+        $styleGroup = CollectionGroup::where('handle', 'styles')->first();
 
         return response()->json([
             'data' => $styleGroup ? CategoryResource::collection($styleGroup->collections()->get()->toTree()) : [],
