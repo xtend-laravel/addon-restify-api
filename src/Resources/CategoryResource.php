@@ -5,7 +5,13 @@ namespace XtendLunar\Addons\RestifyApi\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Lunar\Models\Collection;
+use Lunar\Models\Url;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
+/**
+ * Class CategoryResource
+ * @mixin \Lunar\Models\Collection
+ */
 class CategoryResource extends JsonResource
 {
     /**
@@ -19,11 +25,19 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'active' => (bool) ($this->legacy_data['active'] ?? true),
             'name' => $this->resource->translateAttribute('name') ?? null,
+            'sub_heading' => $this->resource->translateAttribute('sub_heading') ?? null,
+            'description' => $this->resource->translateAttribute('description') ?? null,
             'count' => $this->getCount($request),
             'children' => CategoryResource::collection(
                 resource: $this->children->filter(fn (Collection $category) => $category->legacy_data['active'] ?? true),
             ),
-            'thumbnail_src' => $this->resource->thumbnail?->getFullUrl(),
+            'thumbnail' => $this->getFirstMediaUrl('images', 'medium') ?? null,
+            'gallery' => $this->getMedia('images')->map(fn (Media $media) => $media->getFullUrl()),
+            'slug' => $this->resource->urls->first(function (Url $url) {
+                $matchesLocale = $url->language->code === app()->getLocale();
+
+                return $matchesLocale || $url->language->code === config('app.fallback_locale');
+            })?->slug,
         ];
     }
 
