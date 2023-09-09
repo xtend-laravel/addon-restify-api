@@ -19,17 +19,11 @@ class ProductImagesGetter extends Getter
     ): JsonResponse {
         // @todo optimise to load relationship faster
         $productId = $repository->model()->product_id ?? $repository->model()->id;
-        $product = Product::find($productId);
-
-        // @todo product should always exist
-        // however, the following line may throw an exception when $product is null
-
-        // @todo optimise images size later + hack for jacquesloup until sync new catalog
-        $size = str_contains($product?->thumbnail?->getUrl(), 'fra1.digitaloceanspaces') ? 'medium' : 'large';
+        $product = Product::findOrFail($productId);
 
         return response()->json([
-            'thumbnail' => $product?->thumbnail?->getUrl($size) ?? null,
-            'gallery' => $product?->images->map(fn ($image) => $image->getUrl($size)),
+            'thumbnail' => $product?->thumbnail?->getUrl('medium') ?? null,
+            'gallery' => $product?->images->map(fn ($image) => $image->getUrl('large')),
         ]);
     }
 }
