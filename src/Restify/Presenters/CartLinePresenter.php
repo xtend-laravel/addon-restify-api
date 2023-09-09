@@ -19,7 +19,10 @@ class CartLinePresenter extends PresenterResource implements Presentable
                 repository: ProductRepository::resolveWith($this->data->purchasable->product),
                 data: $this->data->purchasable->product,
             )->transform($request),
-            'purchasable' => [...$this->data->purchasable->toArray(), 'images' => ['thumbnail' => $this->data->purchasable->getThumbnail()->getUrl('large')]],
+            'purchasable' => [
+                ...$this->data->purchasable->toArray(),
+                'images' => ['thumbnail' => $this->data->purchasable->images->first()?->getUrl('medium')],
+            ],
             'quantity' => $this->data->quantity,
             'total' => $this->data->total?->value,
         ];
