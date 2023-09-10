@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Lunar\Models\Cart;
 
 class LoginController extends Controller
 {
@@ -31,8 +32,20 @@ class LoginController extends Controller
             abort(401, 'Invalid password.');
         }
 
+        $cart = $user->cart;
+        if ($request->has('session_id') && !$cart) {
+            $cart = Cart::query()
+                ->where('session_id', $request->input('session_id'))
+                ->sole();
+            $cart->update([
+                'user_id' => $user->id,
+                'customer_id' => $user->latestCustomer()?->id,
+            ]);
+        }
+
         return data([
             'user' => $user,
+            'cartId' => $cart?->id,
             'token' => $user->createToken('login'),
         ]);
     }
