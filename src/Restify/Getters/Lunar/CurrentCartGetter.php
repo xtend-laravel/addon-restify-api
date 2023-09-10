@@ -26,6 +26,7 @@ class CurrentCartGetter extends Getter
         return data([
             'cart' => [
                 'id' => $cart->id,
+                'sessionId' => $cart->session_id,
                 'lastAddedLineId' => $cart->lines()->latest('updated_at')->first()?->id,
                 'lineItems' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
                     $line->purchasable->load('values.option');
