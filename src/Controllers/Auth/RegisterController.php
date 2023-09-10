@@ -8,7 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Lunar\Models\Cart;
 use Lunar\Models\Customer;
+use XtendLunar\Addons\RestifyApi\Events\UserRegistered;
 
 class RegisterController extends Controller
 {
@@ -27,6 +30,18 @@ class RegisterController extends Controller
         $user = $this
             ->createCustomer($request)
             ->attachUser($request);
+
+        if ($request->has('session_id') && !$user->cart) {
+            Cart::query()
+                ->where('session_id', $request->input('session_id'))
+                ->sole()
+                ->update([
+                    'user_id' => $user->id,
+                    'customer_id' => $user->latestCustomer()?->id,
+                ]);
+        }
+
+        UserRegistered::dispatch($user);
 
         return data([
             'user' => $user,
@@ -47,6 +62,12 @@ class RegisterController extends Controller
 
     protected function attachUser(Request $request): User
     {
+        $tempPassword = 'AWR23'.$this->customer->id;
+        $request->merge([
+            'password' => $tempPassword,
+            'password_confirmation' => $tempPassword,
+        ]);
+
         return $this->customer->users()->create([
             'name' => $this->customer->fullName,
             'email' => $request->input('email'),
