@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Lunar\Models\Address;
 use Lunar\Models\Country;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CountryStatesGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\AddressPresenter;
 
 class AddressRepository extends Repository
@@ -38,5 +39,12 @@ class AddressRepository extends Repository
         );
 
         return ok();
+    }
+
+    public function getters(RestifyRequest $request): array
+    {
+        return [
+            CountryStatesGetter::make()->onlyOnIndex(),
+        ];
     }
 }
