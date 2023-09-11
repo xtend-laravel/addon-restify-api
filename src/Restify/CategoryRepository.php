@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 use Binaryk\LaravelRestify\Fields\HasMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
+use XtendLunar\Addons\RestifyApi\Restify\Actions\GetCategoryProducts;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\ShopStyleCollectionGetter;
@@ -34,6 +35,13 @@ class CategoryRepository extends Repository
             FilterGroupsGetter::make(),
             CategoriesTreeGetter::make(),
             ShopStyleCollectionGetter::make(),
+        ];
+    }
+
+    public function actions(RestifyRequest $request): array
+    {
+        return [
+            GetCategoryProducts::make(),
         ];
     }
 }
