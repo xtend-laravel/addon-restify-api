@@ -23,6 +23,12 @@ class CurrentCartGetter extends Getter
             ? Cart::query()->findOrFail($request->cartId)->refresh()->calculate()
             : $this->getCartFromSession($request);
 
+        if ($cart->hasCompletedOrders()) {
+            return data([
+                'cart' => null,
+            ]);
+        }
+
         return data([
             'cart' => [
                 'id' => $cart->id,
