@@ -14,7 +14,7 @@ class CreateOrderAction extends Action
         $cart = $models;
 
         try {
-            $cart->createOrder();
+            $order = $cart->createOrder();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -22,7 +22,7 @@ class CreateOrderAction extends Action
         }
 
         return data([
-            'order' => $cart->order,
+            'order' => $order,
         ]);
     }
 }
