@@ -17,12 +17,13 @@ class CountryStatesGetter extends Getter
     {
         $countries = Country::all();
 
-        return response()->json([
-            'countries' => $countries,
-            'countryStates' => $countries->map(function ($country) {
+        return data([
+            'countries' => $countries->map(function ($country) {
                 return [
-                    'country' => $country,
-                    'states' => $country->states,
+                    'id' => $country->id,
+                    'name' => $country->name,
+                    'iso2' => $country->iso2,
+                    'states' => $country->states->pluck('name', 'id')->toArray(),
                 ];
             }),
         ]);
