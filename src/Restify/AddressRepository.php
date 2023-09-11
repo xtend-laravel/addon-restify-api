@@ -6,6 +6,7 @@ use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Support\Facades\DB;
 use Lunar\Models\Address;
 use Lunar\Models\Country;
+use Lunar\Models\State;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CountryStatesGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\AddressPresenter;
@@ -31,12 +32,8 @@ class AddressRepository extends Repository
 
     public function update(RestifyRequest $request, $repositoryId)
     {
-        $country = Country::firstWhere('name', $request->input('country'));
-
-        $this->resource->update(
-            $request->validated()+
-            ['country_id' => $country?->id]
-        );
+        $request->offsetUnset('user_id');
+        $this->resource->update($request->all());
 
         return ok();
     }
