@@ -15,7 +15,7 @@ abstract class Repository extends RestifyRepository
     use InteractsWithDefaultFields;
     use InteractsWithPresenter;
 
-    public static int $defaultPerPage = 12;
+    public static int $defaultPerPage = 10;
 
     public static int $defaultRelatablePerPage = 20;
 
