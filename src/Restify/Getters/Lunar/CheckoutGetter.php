@@ -35,6 +35,7 @@ class CheckoutGetter extends Getter
             'selectedShippingIdentifier' => $cart->getShippingOption()?->getIdentifier(),
             'addresses' => $this->getCustomerAddresses($request),
             'shipping_methods' => $shippingOptions,
+            'orderStatus' => $cart->completedOrders->first()?->status ?? null,
         ]);
     }
 
