@@ -18,7 +18,7 @@ class DashboardResource extends JsonResource
      */
     public function toArray(Request $request)
     {
-        /** @var Order[] $orders */
+        /** @var \Illuminate\Support\Collection $orders */
         $orders = $request->user()->orders()
             ->whereNot('status', 'cancelled')
             ->latest()

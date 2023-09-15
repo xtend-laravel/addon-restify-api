@@ -26,7 +26,7 @@ class CurrentCartGetter extends Getter
         if ($cart->hasCompletedOrders()) {
             return data([
                 'cart' => null,
-            ]);
+            ], 404);
         }
 
         return data([
