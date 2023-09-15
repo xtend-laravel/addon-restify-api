@@ -12,6 +12,17 @@ class CreateOrderAction extends Action
     public function handle(ActionRequest $request, Cart $models): JsonResponse
     {
         $cart = $models;
+        $auth = auth('sanctum');
+
+        /** @var \App\Models\User $user */
+        $user = $auth->user();
+
+        if ($auth->check() && $user->customers()->exists()) {
+            $request->merge([
+                'customer_id' => $user->customers()->first()->id,
+                'user_id' => $user->id,
+            ]);
+        }
 
         try {
             $order = $cart->createOrder();
