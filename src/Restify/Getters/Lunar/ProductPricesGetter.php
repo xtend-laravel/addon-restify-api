@@ -27,7 +27,6 @@ class ProductPricesGetter extends Getter
         // @todo optimise to load relationship faster
         $productId = $repository->model()->product_id ?? $repository->model()->id;
         $product = Product::find($productId);
-        $pricing = Pricing::for($product->variants->first())->get();
 
         $discounts = $this->findGlobalDiscounts();
         $basePrice = $product->basePrice?->price?->value ?? null;
@@ -49,12 +48,10 @@ class ProductPricesGetter extends Getter
             $data = $discount->data;
 
             if ($data['fixed_value']) {
-                $basePrice = $basePrice - $data['fixed_values'][$product->currency->code];
-                return $basePrice;
+                return $basePrice - $data['fixed_values'][$product->currency->code];
             }
 
-            $basePrice = $basePrice - ($basePrice * $data['percentage'] / 100);
-            return $basePrice;
+            return $basePrice - round($basePrice * $data['percentage'] / 100);
         }
     }
 
