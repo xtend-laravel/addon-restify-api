@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\OrderLine;
+use Lunar\Models\ProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use XtendLunar\Addons\RestifyApi\Restify\OrderRepository;
 
@@ -14,7 +15,9 @@ class OrderPresenter extends PresenterResource implements Presentable
     {
         return [
             'id' => $this->data->id,
-            'products' => $this->data->lines->transform(function (OrderLine $line) use ($request) {
+            'products' => $this->data->lines->filter(
+                fn (OrderLine $line) => $line->purchasable_type === ProductVariant::class,
+            )->transform(function (OrderLine $line) use ($request) {
                 $line->purchasable->load('values.option');
 
                 return OrderLinePresenter::fromData(
