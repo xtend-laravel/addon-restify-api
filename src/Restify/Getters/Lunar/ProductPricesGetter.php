@@ -90,7 +90,7 @@ class ProductPricesGetter extends Getter
      */
     protected function findGlobalDiscounts(): array
     {
-        return BlinkFacade::once('global_discounts', function () {
+        return BlinkFacade::once('global_amount_off_discounts', function () {
             $discounts = Discount::active()->usable()->whereNull('coupon')
                 ->whereType(AmountOff::class)
                 ->orderBy('priority', 'desc')
