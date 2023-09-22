@@ -46,6 +46,7 @@ class CurrentCartGetter extends Getter
                 }),
                 'totals' => [
                     'sub_total' => $cart->subTotal->value,
+                    'sub_total_discounted' => $cart->subTotalDiscounted->value,
                     'discount_total' => $cart->discountTotal?->value,
                     'shipping_total' => $cart->shippingTotal?->value,
                     'tax_total' => $cart->taxTotal->value,
