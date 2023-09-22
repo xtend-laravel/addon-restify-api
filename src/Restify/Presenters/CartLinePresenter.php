@@ -25,8 +25,9 @@ class CartLinePresenter extends PresenterResource implements Presentable
             ],
             'quantity' => $this->data->quantity,
             'subtotal' => $this->data->subTotal?->value,
-            'subtotalDiscounted' => $this->data->subTotalDiscounted?->value,
-            'discountTotal' => $this->data->discountTotal?->value,
+            'subtotal_discounted' => $this->data->subTotalDiscounted?->value,
+            'discount_total' => $this->data->discountTotal?->value,
+            'tax_amount' => $this->data->taxAmount?->value,
             'total' => $this->data->total?->value,
         ];
     }
