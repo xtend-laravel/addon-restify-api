@@ -12,6 +12,7 @@ use XtendLunar\Addons\RestifyApi\Restify\Actions\AddToCartAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateCartLineAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\UpdateShippingOptionAction;
 use XtendLunar\Addons\RestifyApi\Restify\Concerns\InteractsWithDefaultFields;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Cart\ShippingOptionsGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CurrentCartGetter;
 
 class CartRepository extends Repository
@@ -39,6 +40,7 @@ class CartRepository extends Repository
     {
         return [
             CurrentCartGetter::new(),
+            ShippingOptionsGetter::new(),
         ];
     }
 }
