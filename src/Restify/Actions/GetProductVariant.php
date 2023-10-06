@@ -7,6 +7,8 @@ use Binaryk\LaravelRestify\Http\Requests\ActionRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Lunar\Models\Product;
+use Lunar\Models\ProductOption;
+use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
 
 class GetProductVariant extends Action
@@ -19,6 +21,8 @@ class GetProductVariant extends Action
             'color' => $request->input('color'),
             'size'  => $request->input('size')
         ];
+
+        $selectedOptionType = $request->input('selectedOptionType');
 
         $options = collect($options)->filter()->toArray();
         $valueIds = [];
@@ -47,7 +51,27 @@ class GetProductVariant extends Action
                 'sku'    => $variant->sku,
                 'images' => !blank($images) ? $images : [$variant->getThumbnail()->getUrl('large')],
                 'price'  => $variant->basePrices()->first()?->price->value,
-            ]
+                'availableVariants' => $selectedOptionType ? $this->getAvailableVariantIds($product, $selectedOptionType, $options) : [],
+            ],
         ]);
+    }
+
+    protected function getAvailableVariantIds(Product $product, string $selectedOptionType, array $options): array
+    {
+        $selectedOption = $options[$selectedOptionType] ?? null;
+        if (!$selectedOption) {
+            return [];
+        }
+
+        return $product->variants()
+            ->whereHas('values', function ($query) use ($selectedOption) {
+                $query->where('value_id', $selectedOption);
+            })
+            ->get()
+            ->filter(fn (ProductVariant $variant) => $variant->stock > 0)
+            ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id))
+            ->unique()
+            ->values()
+            ->toArray();
     }
 }
