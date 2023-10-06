@@ -3,9 +3,12 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Actions;
 
 use Binaryk\LaravelRestify\Actions\Action;
+use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Http\Request;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\Cart;
+use Lunar\Models\CartLine;
+use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class UpdateShippingOptionAction extends Action
 {
@@ -23,6 +26,18 @@ class UpdateShippingOptionAction extends Action
             ], 422);
         }
 
-        return ok();
+        return data([
+            'cart' => [
+                'id' => $cart->id,
+                'totals' => [
+                    'sub_total' => $cart->subTotal->value,
+                    'sub_total_discounted' => $cart->subTotalDiscounted->value,
+                    'discount_total' => $cart->discountTotal?->value,
+                    'shipping_total' => $cart->shippingTotal?->value,
+                    'tax_total' => $cart->taxTotal->value,
+                    'total' => $cart->total->value,
+                ],
+            ],
+        ]);
     }
 }
