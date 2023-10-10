@@ -30,7 +30,7 @@ class ProductRepository extends Repository
     {
         return $query
             ->where('status', 'published')
-            ->where('stock', '>', 0)
+            //->where('stock', '>', 0)
             ->latest();
     }
 

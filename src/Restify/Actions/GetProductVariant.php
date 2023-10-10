@@ -7,7 +7,6 @@ use Binaryk\LaravelRestify\Http\Requests\ActionRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Lunar\Models\Product;
-use Lunar\Models\ProductOption;
 use Lunar\Models\ProductOptionValue;
 use Lunar\Models\ProductVariant;
 
