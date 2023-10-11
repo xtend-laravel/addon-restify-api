@@ -25,6 +25,8 @@ class UpdateShippingOptionAction extends Action
             ], 422);
         }
 
+        $cart->refresh()->calculate();
+
         return data([
             'cart' => [
                 'id' => $cart->id,
