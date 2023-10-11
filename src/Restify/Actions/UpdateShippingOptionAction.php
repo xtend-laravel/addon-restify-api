@@ -3,12 +3,9 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Actions;
 
 use Binaryk\LaravelRestify\Actions\Action;
-use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Http\Request;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\Cart;
-use Lunar\Models\CartLine;
-use XtendLunar\Addons\RestifyApi\Restify\Presenters\CartLinePresenter;
 
 class UpdateShippingOptionAction extends Action
 {
@@ -19,7 +16,9 @@ class UpdateShippingOptionAction extends Action
         try {
             $shippingOptions = ShippingManifest::getOptions($cart);
             $shippingOption = $shippingOptions->first(fn ($option) => $option->getIdentifier() == $request->identifier);
-            $cart->setShippingOption($shippingOption);
+            if ($shippingOption) {
+                $cart->setShippingOption($shippingOption);
+            }
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
