@@ -2,12 +2,13 @@
 
 namespace XtendLunar\Addons\RestifyApi\Notifications;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Xtend\Extensions\Lunar\Core\Models\Order;
 
-class RegistrationAdminNotification extends Notification
+class OrderFailedAdminNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,9 +17,13 @@ class RegistrationAdminNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected User $user)
+    public function __construct(protected Order $order)
     {
-        //
+        $this->message = collect([
+            __('Order :reference has failed.', ['reference' => $this->order->reference]),
+            __('Customer: :customer', ['customer' => $this->order->customer->email]),
+            __('Total: :total', ['total' => $this->order->total]),
+        ])->implode('<br>');
     }
 
     /**
@@ -36,10 +41,7 @@ class RegistrationAdminNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->line('New user registered.')
-            ->line("User: {$this->user->email}")
-            ->action('Notification Action', url('/'));
+        return (new MailMessage)->line($this->message);
     }
 
     /**

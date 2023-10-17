@@ -12,6 +12,8 @@ class RegistrationCustomerNotification extends Notification
 {
     use Queueable;
 
+    protected string $message;
+
     /**
      * Create a new notification instance.
      */
