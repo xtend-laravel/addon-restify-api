@@ -2,13 +2,21 @@
 
 namespace XtendLunar\Addons\RestifyApi\Restify\Actions;
 
+use App\Notifications\OrderStatusPaymentError;
+use App\Notifications\OrderStatusPaymentReceived;
 use Binaryk\LaravelRestify\Actions\Action;
 use Binaryk\LaravelRestify\Http\Requests\ActionRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Notification;
+use Lunar\Base\DataTransferObjects\PaymentAuthorize;
 use Lunar\Facades\Payments;
 use Lunar\Models\Cart;
-use Lunar\Models\Order;
 use Lunar\PaymentTypes\AbstractPayment;
+use Xtend\Extensions\Lunar\Core\Models\Order;
+use XtendLunar\Addons\RestifyApi\Notifications\OrderCompletedAdminNotification;
+use XtendLunar\Addons\RestifyApi\Notifications\OrderFailedAdminNotification;
+use XtendLunar\Addons\RestifyApi\Notifications\RegistrationAdminNotification;
+use XtendLunar\Addons\RestifyApi\Notifications\RegistrationCustomerNotification;
 
 class AuthorizePaymentCheckoutAction extends Action
 {
@@ -31,6 +39,7 @@ class AuthorizePaymentCheckoutAction extends Action
             ->withData($request->all());
 
         try {
+            /** @var PaymentAuthorize $paymentStatus */
             $paymentStatus = $paymentDriver->init()->authorize();
         } catch (\Exception $e) {
             return response()->json([
@@ -38,8 +47,28 @@ class AuthorizePaymentCheckoutAction extends Action
             ], 422);
         }
 
+        $paymentStatus->success
+            ? $this->notifyPaymentSuccess($order)
+            : $this->notifyPaymentFailure($order);
+
         return data([
             'paymentStatus' => $paymentStatus,
         ]);
+    }
+
+    protected function notifyPaymentSuccess(Order $order): void
+    {
+        $order->user->notify(new OrderStatusPaymentReceived($order, nl2br(request('notes'))));
+
+        Notification::route('mail', config('mail.from.address'))
+            ->notify(new OrderCompletedAdminNotification($order));
+    }
+
+    protected function notifyPaymentFailure(Order $order): void
+    {
+        $order->user->notify(new OrderStatusPaymentError($order));
+
+        Notification::route('mail', config('mail.from.address'))
+            ->notify(new OrderFailedAdminNotification($order));
     }
 }
