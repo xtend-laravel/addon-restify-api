@@ -22,6 +22,7 @@ class OrderLinePresenter extends PresenterResource implements Presentable
             )->transform($request),
             'purchasable' => $this->data->purchasable,
             'quantity' => $this->data->quantity,
+            'sub_total' => $this->data->sub_total?->value,
             'total' => $this->data->total?->value,
         ];
     }

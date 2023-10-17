@@ -37,11 +37,18 @@ class OrderPresenter extends PresenterResource implements Presentable
 
     protected function getTotals()
     {
+        $orderLines = $this->data->lines->filter(
+            fn (OrderLine $line) => $line->purchasable_type === ProductVariant::class,
+        );
+
         return [
             'sub_total' => $this->data->sub_total->value,
             'shipping_total' => $this->data->shipping_total->value,
             'discount_total' => $this->data->discount_total->value,
             'tax_total' => $this->data->tax_total->value,
+            'weight_total' => $orderLines->sum(
+                fn(OrderLine $line) => $line->purchasable->weight_value * $line->quantity,
+            ).' '.$orderLines->first()->purchasable->weight_unit,
             'total' => $this->data->total->value,
         ];
     }
