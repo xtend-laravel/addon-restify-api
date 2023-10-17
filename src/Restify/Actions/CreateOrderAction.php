@@ -26,6 +26,8 @@ class CreateOrderAction extends Action
 
         try {
             $order = $cart->createOrder();
+            $cart->order_id = $order->id;
+            $cart->save();
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
