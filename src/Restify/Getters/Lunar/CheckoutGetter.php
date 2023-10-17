@@ -27,6 +27,11 @@ class CheckoutGetter extends Getter
 
         $shippingOptions = ShippingManifest::getOptions($cart);
 
+        $cart->updateQuietly([
+            'user_id' => $request->user()->id,
+            'customer_id' => $request->user()->latestCustomer()?->id,
+        ]);
+
         return data([
             'selectedAddressIds' => [
                 'shipping' => $cart->shipping_address_id,
