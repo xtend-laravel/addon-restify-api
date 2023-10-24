@@ -5,6 +5,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
 use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
@@ -20,10 +21,10 @@ class CurrentCartGetter extends Getter
     {
         /** @var Cart $cart */
         $cart = $request->has('cartId')
-            ? Cart::query()->findOrFail($request->cartId)->refresh()->calculate()
-            : $this->getCartFromSession($request);
+            ? $this->getCartById($request)
+            : $this->getCartBySession($request);
 
-        $cart->calculate();
+        $cart->refresh()->calculate();
 
         if ($cart->hasCompletedOrders()) {
             return data([
@@ -57,14 +58,29 @@ class CurrentCartGetter extends Getter
         ]);
     }
 
-    protected function getCartFromSession(GetterRequest $request): Cart
+    protected function getCartById(GetterRequest $request): Cart
     {
-        return Cart::query()->firstOrCreate([
+        /** @var Cart $cart */
+        try {
+            $cart = Cart::query()->findOrFail($request->cartId);
+        } catch (ModelNotFoundException) {
+            return $this->getCartBySession($request);
+        }
+
+        return $cart;
+    }
+
+    protected function getCartBySession(GetterRequest $request): Cart
+    {
+        /** @var Cart $cart */
+        $cart = Cart::query()->firstOrCreate([
             'session_id' => $request->sessionId,
         ], [
             'currency_id' => Currency::getDefault()->id,
             'channel_id' => Channel::getDefault()->id,
             'user_id' => $request->userId ?? null,
-        ])->refresh();
+        ]);
+
+        return $cart;
     }
 }
