@@ -33,6 +33,7 @@ class AddressRepository extends Repository
     public function update(RestifyRequest $request, $repositoryId)
     {
         $request->offsetUnset('user_id');
+        $request->offsetUnset('country_iso');
         $this->resource->update($request->all());
 
         return ok();
