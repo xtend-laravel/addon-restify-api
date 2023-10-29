@@ -26,7 +26,7 @@ class GetProductVariant extends Action
         $options = collect($options)->filter()->toArray();
         $valueIds = [];
 
-        foreach ($options as $handle => $value) {
+        foreach ($options as $value) {
             $valueIds[] = $value;
         }
 
@@ -50,16 +50,34 @@ class GetProductVariant extends Action
                 'sku'    => $variant->sku,
                 'images' => !blank($images) ? $images : [$variant->getThumbnail()->getUrl('large')],
                 'price'  => $variant->basePrices()->first()?->price->value,
-                'availableVariants' => $selectedOptionType ? $this->getAvailableVariantIds($product, $selectedOptionType, $options) : [],
+                'availableColorIds' => $this->getAvailableColorIds($product),
+                'availableVariants' => $this->getAvailableVariantIds($product, $options, $selectedOptionType),
             ],
         ]);
     }
 
-    protected function getAvailableVariantIds(Product $product, string $selectedOptionType, array $options): array
+    protected function getAvailableColorIds(Product $product): array
+    {
+        return $product
+            ->variants()
+            ->get()
+            ->filter(fn (ProductVariant $variant) => $variant->stock > 0)
+            ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id))
+            ->unique()
+            ->values()
+            ->filter(fn ($valueId) => ProductOptionValue::find($valueId)->option->name->en === 'Color')
+            ->unique()
+            ->values()
+            ->toArray();
+    }
+
+    protected function getAvailableVariantIds(Product $product, array $options, ?string $selectedOptionType = null): array
     {
         $selectedOption = $options[$selectedOptionType] ?? null;
         if (!$selectedOption) {
-            return [];
+            /** @var ProductVariant $variant */
+            $variant = $product->variants->first(fn (ProductVariant $variant) => $variant->stock > 0);
+            return $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id)->toArray();
         }
 
         return $product->variants()
