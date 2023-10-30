@@ -33,17 +33,17 @@ class CurrentCartGetter extends Getter
             ], 404);
         }
 
-        Log::driver('slack')->debug('CurrentCartGetter', [
-            'cart' => $cart->toArray(),
-            'totals' => [
-                'sub_total' => $cart->subTotal->value,
-                'sub_total_discounted' => $cart->subTotalDiscounted->value,
-                'discount_total' => $cart->discountTotal?->value,
-                'shipping_total' => $cart->shippingTotal?->value,
-                'tax_total' => $cart->taxTotal->value,
-                'total' => $cart->total->value,
-            ],
-        ]);
+        // Log::driver('slack')->debug('CurrentCartGetter', [
+        //     'cart' => $cart->toArray(),
+        //     'totals' => [
+        //         'sub_total' => $cart->subTotal->value,
+        //         'sub_total_discounted' => $cart->subTotalDiscounted->value,
+        //         'discount_total' => $cart->discountTotal?->value,
+        //         'shipping_total' => $cart->shippingTotal?->value,
+        //         'tax_total' => $cart->taxTotal->value,
+        //         'total' => $cart->total->value,
+        //     ],
+        // ]);
 
         return data([
             'cart' => [

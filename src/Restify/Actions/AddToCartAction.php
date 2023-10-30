@@ -26,11 +26,11 @@ class AddToCartAction extends Action
             quantity: $request->product['quantity'] ?? 1,
         )->refresh()->calculate();
 
-        Log::driver('slack')->debug('AddToCartAction', [
-            'cart' => $cart->toArray(),
-            'purchasable' => $purchasable->toArray(),
-            'request' => $request->toArray(),
-        ]);
+        // Log::driver('slack')->debug('AddToCartAction', [
+        //     'cart' => $cart->toArray(),
+        //     'purchasable' => $purchasable->toArray(),
+        //     'request' => $request->toArray(),
+        // ]);
 
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
