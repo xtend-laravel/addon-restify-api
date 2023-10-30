@@ -7,6 +7,7 @@ use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
@@ -31,6 +32,18 @@ class CurrentCartGetter extends Getter
                 'cart' => null,
             ], 404);
         }
+
+        Log::driver('slack')->debug('CurrentCartGetter', [
+            'cart' => $cart->toArray(),
+            'totals' => [
+                'sub_total' => $cart->subTotal->value,
+                'sub_total_discounted' => $cart->subTotalDiscounted->value,
+                'discount_total' => $cart->discountTotal?->value,
+                'shipping_total' => $cart->shippingTotal?->value,
+                'tax_total' => $cart->taxTotal->value,
+                'total' => $cart->total->value,
+            ],
+        ]);
 
         return data([
             'cart' => [
