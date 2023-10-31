@@ -21,6 +21,17 @@ class AddToCartAction extends Action
         $cart = $models;
         $purchasable = $this->getPurchasable($request->product);
 
+        /** @var CartLine | null $purchasableInCart */
+        if ($purchasableInCart = $cart->lines()->firstWhere('purchasable_id', $purchasable->id)) {
+            $stock = $purchasable->stock - $purchasableInCart->quantity;
+            if ($stock < 1) {
+                return data([
+                    'status' => 'out_of_stock',
+                    'message' => 'This product is out of stock',
+                ]);
+            }
+        }
+
         $cart->add(
             purchasable: $purchasable,
             quantity: $request->product['quantity'] ?? 1,
