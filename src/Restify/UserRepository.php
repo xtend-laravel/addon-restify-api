@@ -3,8 +3,8 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use App\Models\User;
-use Lunar\Models\Customer;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\AuthenticatedUserGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\UserPresenter;
 
 class UserRepository extends Repository
@@ -31,7 +31,7 @@ class UserRepository extends Repository
         $user = User::findOrFail($userId);
 
         $customer = $user->customers()->first();
-        
+
         $customer->update([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
@@ -39,5 +39,12 @@ class UserRepository extends Repository
             'company_name' => $request->input('company_name'),
             'title' => $request->input('title'),
         ]);
+    }
+
+    public function getters(RestifyRequest $request): array
+    {
+        return [
+            AuthenticatedUserGetter::new(),
+        ];
     }
 }
