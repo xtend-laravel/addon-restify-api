@@ -28,46 +28,14 @@ class CurrentCartGetter extends Getter
         $cart->refresh()->calculate();
 
         if ($cart->hasCompletedOrders()) {
+            $cart = $this->createNewCartFromExistingSession($cart, $request)->refresh()->calculate();
             return data([
-                'cart' => null,
-            ], 404);
+                'cart' => $this->cartData($cart, $request),
+            ]);
         }
 
-        // Log::driver('slack')->debug('CurrentCartGetter', [
-        //     'cart' => $cart->toArray(),
-        //     'totals' => [
-        //         'sub_total' => $cart->subTotal->value,
-        //         'sub_total_discounted' => $cart->subTotalDiscounted->value,
-        //         'discount_total' => $cart->discountTotal?->value,
-        //         'shipping_total' => $cart->shippingTotal?->value,
-        //         'tax_total' => $cart->taxTotal->value,
-        //         'total' => $cart->total->value,
-        //     ],
-        // ]);
-
         return data([
-            'cart' => [
-                'id' => $cart->id,
-                'sessionId' => $cart->session_id,
-                'lastAddedLineId' => $cart->lines()->latest('updated_at')->first()?->id,
-                'lineItems' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
-                    $line->purchasable->load('values.option');
-
-                    return CartLinePresenter::fromData(
-                        repository: RestifyRepository::resolveWith($cart),
-                        data: $line,
-                    )->transform($request);
-                }),
-                'totals' => [
-                    'sub_total' => $cart->subTotal->value,
-                    'sub_total_discounted' => $cart->subTotalDiscounted->value,
-                    'discount_total' => $cart->discountTotal?->value,
-                    'shipping_total' => $cart->shippingTotal?->value,
-                    'tax_total' => $cart->taxTotal->value,
-                    'total' => $cart->total->value,
-                ],
-                'meta' => $cart->meta,
-            ],
+            'cart' => $this->cartData($cart, $request),
         ]);
     }
 
@@ -95,5 +63,58 @@ class CurrentCartGetter extends Getter
         ]);
 
         return $cart;
+    }
+
+    protected function createNewCartFromExistingSession(Cart $cart, GetterRequest $request): Cart
+    {
+        $this->ensureDeleteCartsWithSameSessionNoOrders($request);
+
+        $newCart = Cart::query()->create([
+            'session_id' => $request->sessionId,
+            'currency_id' => Currency::getDefault()->id,
+            'channel_id' => Channel::getDefault()->id,
+            'user_id' => $request->userId ?? null,
+        ]);
+
+        return $newCart;
+    }
+
+    protected function ensureDeleteCartsWithSameSessionNoOrders(GetterRequest $request): void
+    {
+        $carts = Cart::query()->where('session_id', $request->sessionId)->get();
+        $carts->each(function (Cart $cart) {
+            if ($cart->hasCompletedOrders()) {
+                return;
+            }
+
+            $cart->lines()->delete();
+            $cart->delete();
+        });
+    }
+
+    protected function cartData(Cart $cart, GetterRequest $request): array
+    {
+        return [
+            'id' => $cart->id,
+            'sessionId' => $cart->session_id,
+            'lastAddedLineId' => $cart->lines()->latest('updated_at')->first()?->id,
+            'lineItems' => $cart->lines->transform(function (CartLine $line) use ($request, $cart) {
+                $line->purchasable->load('values.option');
+
+                return CartLinePresenter::fromData(
+                    repository: RestifyRepository::resolveWith($cart),
+                    data: $line,
+                )->transform($request);
+            }),
+            'totals' => [
+                'sub_total' => $cart->subTotal->value,
+                'sub_total_discounted' => $cart->subTotalDiscounted->value,
+                'discount_total' => $cart->discountTotal?->value,
+                'shipping_total' => $cart->shippingTotal?->value,
+                'tax_total' => $cart->taxTotal->value,
+                'total' => $cart->total->value,
+            ],
+            'meta' => $cart->meta,
+        ];
     }
 }
