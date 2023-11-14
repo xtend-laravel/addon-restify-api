@@ -15,6 +15,7 @@ class CategoryPresenter extends PresenterResource implements Presentable
         return [
             'id' => $this->data['id'],
             'name' => $this->data['attribute_data']['name'],
+            'sub_heading' => $this->data['attribute_data']['sub_heading'] ?? null,
             'description' => $this->data['attribute_data']['description'] ?? null,
             'filters' => $this->getter($request, 'filter-groups'),
             'image_url' => $collection->thumbnail?->getUrl($imageSize) ?? null,
