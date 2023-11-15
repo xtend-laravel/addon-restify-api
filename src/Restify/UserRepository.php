@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use App\Models\User;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Illuminate\Support\Facades\Hash;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\AuthenticatedUserGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Presenters\UserPresenter;
 
@@ -30,6 +31,16 @@ class UserRepository extends Repository
     {
         $user = User::findOrFail($userId);
 
+        $user->update([
+            'email' => $request->input('email'),
+        ]);
+
+        if ($request->has('new_password')) {
+            $user->update([
+                'password' => Hash::make($request->input('new_password')),
+            ]);
+        }
+
         $customer = $user->customers()->first();
 
         $customer->update([
@@ -37,8 +48,9 @@ class UserRepository extends Repository
             'last_name' => $request->input('last_name'),
             'meta' => $request->input('meta'),
             'company_name' => $request->input('company_name'),
-            'title' => $request->input('title'),
         ]);
+
+        return data($customer);
     }
 
     public function getters(RestifyRequest $request): array

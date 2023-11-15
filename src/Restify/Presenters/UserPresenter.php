@@ -20,11 +20,11 @@ class UserPresenter extends PresenterResource implements Presentable
             'first_name' => $customer->first_name,
             'last_name' => $customer->last_name,
             'company_name' => $customer->company_name,
-            'meta' => [
-                'birth_data' => $customer?->meta['birth_data'] ?? null,
-                'newsletter' => $customer?->meta['newsletter'] ?? false,
-                'terms' => $customer?->meta['terms'] ?? false,
-            ],
+            // 'meta' => [
+            //     'birth_data' => $customer?->meta['birth_data'] ?? null,
+            //     'newsletter' => $customer?->meta['newsletter'] ?? false,
+            //     'terms' => $customer?->meta['terms'] ?? false,
+            // ],
         ];
     }
 }
