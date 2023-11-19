@@ -8,6 +8,7 @@ use XtendLunar\Addons\RestifyApi\Controllers\Auth\RegisterController;
 use XtendLunar\Addons\RestifyApi\Controllers\Auth\ResetPasswordController;
 use XtendLunar\Addons\RestifyApi\Controllers\Auth\VerifyController;
 use XtendLunar\Addons\RestifyApi\Controllers\Auth\VerifyEmailController;
+use XtendLunar\Addons\RestifyApi\Middleware\LanguageMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,4 +51,6 @@ Route::post('resetPassword', ResetPasswordController::class)
 Route::post(
     'restify/carts/{repositoryId}/public-actions',
     \Binaryk\LaravelRestify\Http\Controllers\PerformRepositoryActionController::class
-)->name('actions.repository.performs')->withoutMiddleware('auth:sanctum');
+)
+    ->middleware(LanguageMiddleware::class)
+    ->name('actions.repository.performs')->withoutMiddleware('auth:sanctum');
