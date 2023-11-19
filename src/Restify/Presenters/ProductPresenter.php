@@ -19,8 +19,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             'id' => $this->data['product_id'] ?? $this->data['id'],
             'slug' => $this->repository->resource->urls->first(function (Url $url) {
                 $matchesLocale = $url->language->code === app()->getLocale();
-
-                return $matchesLocale || $url->language->code === config('app.fallback_locale');
+                return $matchesLocale;
             })?->slug,
             'name' => $this->repository->resource->translateAttribute('name'),
             'brand' => $this->data['legacy_data']['manufacturer_name'] ?? '--',
