@@ -22,7 +22,7 @@ class ProductVariantsGetter extends Getter
         $productId = $repository->model()->product_id ?? $repository->model()->id;
         $product = Product::find($productId);
         /** @var \Lunar\Models\ProductVariant $variants */
-        $variants = $product->variants ?? [];
+        $variants = $product->variants()->where('base', false)->get();
 
         return response()->json([
             'options' => $this->getOptions($variants),
@@ -32,7 +32,6 @@ class ProductVariantsGetter extends Getter
     protected function getOptions(Collection|ProductVariant $variants): Collection
     {
         $options = $variants
-            ->filter(fn (ProductVariant $variant) => $variant->base === false)
             ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => [
                 'variant' => $variant,
                 'value' => $value,
