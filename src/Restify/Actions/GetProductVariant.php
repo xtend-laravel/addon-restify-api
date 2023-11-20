@@ -61,8 +61,8 @@ class GetProductVariant extends Action
     {
         return $product
             ->variants()
+            ->where('base', false)
             ->get()
-            ->filter(fn (ProductVariant $variant) => $variant->base === false)
             ->filter(fn (ProductVariant $variant) => $variant->stock > 0)
             ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id))
             ->unique()
@@ -78,7 +78,7 @@ class GetProductVariant extends Action
         $selectedOption = $options[$selectedOptionType] ?? null;
         if (!$selectedOption) {
             /** @var ProductVariant $variant */
-            $variant = $product->variants->first(fn (ProductVariant $variant) => $variant->stock > 0 && $variant->base === false);
+            $variant = $product->variants->first(fn (ProductVariant $variant) => $variant->stock > 0);
             return $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id)->toArray();
         }
 
