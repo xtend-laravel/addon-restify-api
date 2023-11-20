@@ -32,6 +32,7 @@ class ProductVariantsGetter extends Getter
     protected function getOptions(Collection|ProductVariant $variants): Collection
     {
         $options = $variants
+            ->filter(fn (ProductVariant $variant) => $variant->base === false)
             ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => [
                 'variant' => $variant,
                 'value' => $value,

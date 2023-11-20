@@ -36,6 +36,7 @@ class GetProductVariant extends Action
             ->select("{$prefix}product_variants.*")
             ->join("{$prefix}product_option_value_product_variant as vov", "vov.variant_id", "=", "{$prefix}product_variants.id")
             ->join("{$prefix}product_option_values as ov", "ov.id", "=", "vov.value_id")
+            ->where("{$prefix}product_variants.base", false)
             ->whereIn("ov.id", $valueIds)
             ->groupBy("{$prefix}product_variants.id", "{$prefix}product_variants.product_id")
             ->having(DB::raw("count(distinct ov.id)"), count($valueIds))
@@ -61,6 +62,7 @@ class GetProductVariant extends Action
         return $product
             ->variants()
             ->get()
+            ->filter(fn (ProductVariant $variant) => $variant->base === false)
             ->filter(fn (ProductVariant $variant) => $variant->stock > 0)
             ->flatMap(fn (ProductVariant $variant) => $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id))
             ->unique()
@@ -76,11 +78,12 @@ class GetProductVariant extends Action
         $selectedOption = $options[$selectedOptionType] ?? null;
         if (!$selectedOption) {
             /** @var ProductVariant $variant */
-            $variant = $product->variants->first(fn (ProductVariant $variant) => $variant->stock > 0);
+            $variant = $product->variants->first(fn (ProductVariant $variant) => $variant->stock > 0 && $variant->base === false);
             return $variant->values->map(fn (ProductOptionValue $value) => $value->pivot->value_id)->toArray();
         }
 
         return $product->variants()
+            ->where('base', false)
             ->whereHas('values', function ($query) use ($selectedOption) {
                 $query->where('value_id', $selectedOption);
             })
