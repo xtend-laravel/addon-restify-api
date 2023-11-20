@@ -39,10 +39,9 @@ class RegistrationCustomerNotification extends Notification
     {
         $tempPassword = 'AWR23'.$this->user->latestCustomer()->id;
         return (new MailMessage)
-                    ->line('You have been registered successfully.')
+                    ->line('Thank you for registering at awraaf.com!')
                     ->line("Your temporary password is: $tempPassword")
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->action('Login', url('https://awraaf.com/login'));
     }
 
     /**
