@@ -5,6 +5,8 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Lunar\Models\Collection;
+use Lunar\Models\Language;
+use Lunar\Models\Product;
 use Lunar\Models\Url;
 use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 use XtendLunar\Addons\RestifyApi\Restify\ProductRepository;
@@ -17,10 +19,7 @@ class ProductPresenter extends PresenterResource implements Presentable
     {
         return [
             'id' => $this->data['product_id'] ?? $this->data['id'],
-            'slug' => $this->repository->resource->urls->first(function (Url $url) {
-                $matchesLocale = $url->language->code === app()->getLocale();
-                return $matchesLocale;
-            })?->slug,
+            'slug' => $this->getSlug(),
             'name' => $this->repository->resource->translateAttribute('name'),
             'brand' => $this->data['legacy_data']['manufacturer_name'] ?? '--',
             'primary_category_id' => $this->data['primary_category_id'],
@@ -50,5 +49,17 @@ class ProductPresenter extends PresenterResource implements Presentable
             ]),
             'sku' => $this->data['sku'] ?? '--',
         ];
+    }
+
+    protected function getSlug(): string
+    {
+        return $this->repository->resource->urls->first(function (Url $url) {
+            $matchesLocale = $url->language->code === app()->getLocale();
+            return $matchesLocale;
+        })?->slug ?? Url::query()->firstWhere([
+            'language_id' => Language::query()->firstWhere('code', app()->getLocale())?->id,
+            'element_id' => $this->data['product_id'] ?? $this->data['id'],
+            'element_type' => Product::class,
+        ])->slug ?? '--';
     }
 }

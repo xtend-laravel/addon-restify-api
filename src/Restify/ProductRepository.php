@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Lunar\Models\Price;
 use Xtend\Extensions\Lunar\Core\Models\Product;
+use Xtend\Extensions\Lunar\Core\Models\ProductVariant;
+use XtendLunar\Addons\PageBuilder\Models\WidgetSlot;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\GetProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\NotifyWhenAvailable;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
@@ -23,6 +25,16 @@ class ProductRepository extends Repository
     public static string $presenter = ProductPresenter::class;
 
     public static bool|array $public = true;
+
+    protected static function booting(): void
+    {
+        $repositoryId = request()->route()->parameter('repositoryId');
+        if (is_string($repositoryId)) {
+            if ($repository = ProductVariant::query()->firstWhere('sku', strtolower($repositoryId))) {
+                request()->route()->setParameter('repositoryId', $repository->product_id);
+            }
+        }
+    }
 
     public static function indexQuery(RestifyRequest $request, Builder|Relation $query)
     {
