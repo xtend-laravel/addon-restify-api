@@ -20,7 +20,10 @@ class OrderLinePresenter extends PresenterResource implements Presentable
                 repository: ProductRepository::resolveWith($this->data->purchasable->product),
                 data: $this->data->purchasable->product,
             )->transform($request),
-            'purchasable' => $this->data->purchasable,
+            'purchasable' => [
+                ...$this->data->purchasable->toArray(),
+                'images' => ['thumbnail' => $this->data->purchasable->images->first()?->getUrl('medium')],
+            ],
             'quantity' => $this->data->quantity,
             'sub_total' => $this->data->sub_total?->value,
             'total' => $this->data->total?->value,
