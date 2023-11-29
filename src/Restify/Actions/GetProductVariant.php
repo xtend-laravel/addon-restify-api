@@ -53,6 +53,7 @@ class GetProductVariant extends Action
                 'price'  => $variant->basePrices()->first()?->price->value,
                 'availableColorIds' => $this->getAvailableColorIds($product),
                 'availableVariants' => $this->getAvailableVariantIds($product, $options, $selectedOptionType),
+                'availability' => $variant->attribute_data['availability'] ?? 'in-stock',
             ],
         ]);
     }
