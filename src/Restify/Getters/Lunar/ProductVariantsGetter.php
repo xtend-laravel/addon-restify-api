@@ -40,7 +40,7 @@ class ProductVariantsGetter extends Getter
             ->mapWithKeys(fn ($variantValue, $key) => [
                 $this->getGroupName($key) => $variantValue->keyBy('value.id')->map(
                     fn (array $item) => $this->getVariantOption($item['value'], $item['variant']),
-                ),
+                )->sortBy(fn ($item) => array_search($item['name']->en, ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'])),
             ]);
 
         return $options;
