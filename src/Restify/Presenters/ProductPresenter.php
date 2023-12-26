@@ -53,10 +53,7 @@ class ProductPresenter extends PresenterResource implements Presentable
 
     protected function getSlug(): string
     {
-        return $this->repository->resource->urls->first(function (Url $url) {
-            $matchesLocale = $url->language->code === app()->getLocale();
-            return $matchesLocale;
-        })?->slug ?? Url::query()->firstWhere([
+        return Url::query()->firstWhere([
             'language_id' => Language::query()->firstWhere('code', app()->getLocale())?->id,
             'element_id' => $this->data['product_id'] ?? $this->data['id'],
             'element_type' => Product::class,
