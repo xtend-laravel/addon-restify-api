@@ -21,7 +21,7 @@ class OrderFailedAdminNotification extends Notification implements ShouldQueue
     {
         $this->message = collect([
             __('Order :reference has failed.', ['reference' => $this->order->reference]),
-            __('Customer: :customer', ['customer' => $this->order->customer->email]),
+            __('Customer: :customer', ['customer' => $this->order->customer->user->email]),
             __('Total: :total', ['total' => $this->order->total]),
         ])->implode('<br>');
     }
