@@ -67,7 +67,7 @@ class CurrentCartGetter extends Getter
 
     protected function createNewCartFromExistingSession(Cart $cart, GetterRequest $request): Cart
     {
-        $this->ensureDeleteCartsWithSameSessionNoOrders($request);
+        // $this->ensureDeleteCartsWithSameSessionNoOrders($request);
 
         $newCart = Cart::query()->create([
             'session_id' => $request->sessionId,
