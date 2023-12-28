@@ -35,8 +35,7 @@ class LoginController extends Controller
         $cart = $user->cart;
         if ($request->has('session_id') && !$cart) {
             $cart = Cart::query()
-                ->where('session_id', $request->input('session_id'))
-                ->sole();
+                ->firstWhere('session_id', $request->input('session_id'));
             $cart->update([
                 'user_id' => $user->id,
                 'customer_id' => $user->latestCustomer()?->id,

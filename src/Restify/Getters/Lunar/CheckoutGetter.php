@@ -6,7 +6,6 @@ use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Illuminate\Http\JsonResponse;
 use Lunar\Facades\ShippingManifest;
-use Lunar\Models\Address;
 use Xtend\Extensions\Lunar\Core\Models\Cart;
 
 class CheckoutGetter extends Getter

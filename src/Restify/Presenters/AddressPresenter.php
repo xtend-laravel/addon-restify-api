@@ -10,7 +10,9 @@ class AddressPresenter extends PresenterResource implements Presentable
 {
     public function transform(RestifyRequest $request): array
     {
-        $this->data['country_iso'] = Country::find($this->data['country_id'])->iso2;
+        if ($this->data['country_id']) {
+            $this->data['country_iso'] = Country::find($this->data['country_id'])->iso2;
+        }
 
         return $this->data;
     }
