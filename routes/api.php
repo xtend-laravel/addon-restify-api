@@ -61,3 +61,13 @@ Route::post(
 )
     ->middleware(LanguageMiddleware::class)
     ->name('actions.performs')->withoutMiddleware('auth:sanctum');
+
+Route::get(
+    'restify/{repository}/public-getters/{getter}',
+    \Binaryk\LaravelRestify\Http\Controllers\PerformGetterController::class
+)->name('getters.perform')->withoutMiddleware('auth:sanctum');
+
+Route::get(
+    'restify/{repository}/{repositoryId}/public-getters/{getter}',
+    \Binaryk\LaravelRestify\Http\Controllers\PerformRepositoryGetterController::class
+)->name('getters.repository.perform')->withoutMiddleware('auth:sanctum');
