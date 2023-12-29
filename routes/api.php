@@ -49,8 +49,15 @@ Route::post('resetPassword', ResetPasswordController::class)
 
 // @todo Improve this later, temporary solution to exclude auth:sanctum middleware
 Route::post(
-    'restify/carts/{repositoryId}/public-actions',
+    'restify/{repository}/{repositoryId}/public-actions',
     \Binaryk\LaravelRestify\Http\Controllers\PerformRepositoryActionController::class
 )
     ->middleware(LanguageMiddleware::class)
     ->name('actions.repository.performs')->withoutMiddleware('auth:sanctum');
+
+Route::post(
+    'restify/{repository}/public-actions',
+    \Binaryk\LaravelRestify\Http\Controllers\PerformActionController::class
+)
+    ->middleware(LanguageMiddleware::class)
+    ->name('actions.performs')->withoutMiddleware('auth:sanctum');
