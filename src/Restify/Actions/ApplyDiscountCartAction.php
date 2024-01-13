@@ -14,18 +14,18 @@ class ApplyDiscountCartAction extends Action
     {
         $cart = $models;
 
+        $cart->update([
+            'coupon_code' => $request->discountCode,
+        ]);
+
+        $cart->refresh()->calculate();
+
         if (!Discounts::validateCoupon($request->discountCode)) {
             return data([
                 'status' => 'invalid_coupon',
                 'message' => 'The coupon code is invalid',
             ]);
         }
-
-        $cart->update([
-            'coupon_code' => $request->discountCode,
-        ]);
-
-        $cart->refresh()->calculate();
 
         return data([
             'status' => 'valid_coupon',
