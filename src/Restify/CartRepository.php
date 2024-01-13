@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Lunar\Models\Cart;
+use XtendLunar\Addons\RestifyApi\Restify\Actions\ApplyDiscountCartAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\AuthorizePaymentCheckoutAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\CreateOrderAction;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\DeleteCartLineAction;
@@ -29,6 +30,7 @@ class CartRepository extends Repository
             AddToCartAction::new()->onlyOnShow(),
             DeleteCartLineAction::new()->onlyOnShow(),
             UpdateCartLineAction::new()->onlyOnShow(),
+            ApplyDiscountCartAction::new()->onlyOnShow(),
             UpdateCartAddressAction::new()->onlyOnShow(),
             UpdateShippingOptionAction::new()->onlyOnShow(),
             AuthorizePaymentCheckoutAction::new()->onlyOnShow(),
