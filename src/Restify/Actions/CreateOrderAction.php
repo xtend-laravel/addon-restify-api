@@ -33,6 +33,11 @@ class CreateOrderAction extends Action
             $order = $cart->createOrder();
             $cart->order_id = $order->id;
             $cart->save();
+
+            $order->updateQuietly([
+                'customer_id' => $user->customers()->first()->id,
+                'user_id' => $user->id,
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),

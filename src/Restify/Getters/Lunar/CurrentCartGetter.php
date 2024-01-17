@@ -21,9 +21,9 @@ class CurrentCartGetter extends Getter
     public function handle(GetterRequest $request): JsonResponse
     {
         /** @var Cart $cart */
-        $cart = $request->has('cartId')
-            ? $this->getCartById($request)
-            : $this->getCartBySession($request);
+        $cart = $request->has('sessionId')
+            ? $this->getCartBySession($request)
+            : $this->getCartById($request);
 
         $cart->refresh()->calculate();
 
@@ -67,7 +67,7 @@ class CurrentCartGetter extends Getter
 
     protected function createNewCartFromExistingSession(Cart $cart, GetterRequest $request): Cart
     {
-        // $this->ensureDeleteCartsWithSameSessionNoOrders($request);
+        $this->ensureDeleteCartsWithSameSessionNoOrders($request);
 
         $newCart = Cart::query()->create([
             'session_id' => $request->sessionId,
