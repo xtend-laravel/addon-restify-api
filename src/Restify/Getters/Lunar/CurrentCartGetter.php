@@ -7,7 +7,6 @@ use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
@@ -21,9 +20,9 @@ class CurrentCartGetter extends Getter
     public function handle(GetterRequest $request): JsonResponse
     {
         /** @var Cart $cart */
-        $cart = $request->has('sessionId')
-            ? $this->getCartBySession($request)
-            : $this->getCartById($request);
+        $cart = $request->has('cartId')
+            ? $this->getCartById($request)
+            : $this->getCartBySession($request);
 
         $cart->refresh()->calculate();
 
