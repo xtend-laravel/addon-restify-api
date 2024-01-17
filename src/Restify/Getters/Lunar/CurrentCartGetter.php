@@ -82,8 +82,8 @@ class CurrentCartGetter extends Getter
     protected function ensureDeleteCartsWithSameSessionNoOrders(GetterRequest $request): void
     {
         $carts = Cart::query()->where('session_id', $request->sessionId)->get();
-        $carts->each(function (Cart $cart) {
-            if ($cart->hasCompletedOrders()) {
+        $carts->each(function (Cart $cart) use ($request) {
+            if ($cart->hasCompletedOrders() || $request->cartId === $cart->id) {
                 return;
             }
 
