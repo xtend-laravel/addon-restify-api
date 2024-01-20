@@ -32,7 +32,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             'images' => $this->getter($request, 'product-images'),
             'prices' => $this->getter($request, 'product-prices'),
             'variants' => $request->isShowRequest() ? $this->getter($request, 'product-variants') : [],
-            'features' => $request->isShowRequest() ? $this->getter($request, 'product-features') : [],
+            'features' => $this->getter($request, 'product-features'),
             //'related_items' => $this->getter($request, 'product-related-items'),
             'legacy_data' => $this->data['legacy_data'] ?? [],
             'stock' => $this->data['stock'] ?? 0,
