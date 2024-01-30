@@ -58,6 +58,7 @@ class ProductVariantsGetter extends Getter
         return [
             'id' => $productOptionValue->id,
             'variant_id' => $productVariant->id,
+            'is_primary' => $productVariant->primary,
             'name' => $productOptionValue->name,
             'price' => $productOptionValue->price,
             'color' => $productOptionValue->color ?? null,
