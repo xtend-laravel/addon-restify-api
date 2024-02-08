@@ -6,6 +6,7 @@ use Binaryk\LaravelRestify\Getters\Getter;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Http\JsonResponse;
 use Lunar\Models\Collection;
+use Lunar\Models\Language;
 use Lunar\Models\Product;
 use Lunar\Models\Url;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,26 +17,82 @@ class SitemapGetter extends Getter
 
     public function handle(RestifyRequest $request, Collection $model = null): JsonResponse|Response
     {
-        $urls = Url::all()
+        $urls = $this->prepareUrls();
+        $languages = Language::all()->keyBy('code');
+
+        return $this->prepareResponse($urls, $languages);
+    }
+
+    protected function prepareUrls(): \Illuminate\Support\Collection
+    {
+        return Url::all()
             ->map(fn (Url $url) => [
                 'id' => $url->id,
                 'slug' => $url->slug,
+                'element' => $url->element,
                 'language_code' => $url->language->code,
                 'element_type' => $url->element_type,
-                'images' => $url->element_type === Product::class ? $this->getProductImages($url->element) : null,
+                'image' => $url->element_type === Product::class ? $this->getProductPrimaryImage($url->element) : null,
                 'updated_at' => $url->updated_at,
             ])
-            ->groupBy('element_type');
+            ->groupBy(['language_code', 'element_type']);
+    }
 
+    protected function prepareResponse($urls, $languages): JsonResponse
+    {
         return response()->json([
-            'collections' => $urls->get(Collection::class),
-            'products' => $urls->get(Product::class),
-            'pages' => [],
+            'urls' => $languages->mapWithKeys(function (Language $language) use ($urls) {
+                return [
+                    $language->code => $this->prepareLanguageUrls($urls, $language)
+                ];
+            }),
         ]);
     }
 
-    protected function getProductImages(Product $product)
+    protected function prepareLanguageUrls($urls, $language): \Illuminate\Support\Collection
     {
-        return $product->images->map(fn ($image) => $image->getUrl('small'));
+        return $urls->get($language->code)->mapWithKeys(function ($urls, $elementType) {
+            $key = $this->getElementTypeKey($elementType);
+
+            return [
+                $key => $this->prepareElementTypeUrls($urls)
+            ];
+        });
+    }
+
+    protected function getElementTypeKey($elementType)
+    {
+        return match ($elementType) {
+            Product::class => 'products',
+            Collection::class => 'collections',
+        };
+    }
+
+    protected function prepareElementTypeUrls($urls)
+    {
+        return collect($urls)
+            ->map(function ($url) {
+                /** @var Product|Collection $element */
+                $element = $url['element'];
+                return $element instanceof Product ? [
+                    'slug' => $url['slug'],
+                    'category_slug' => Url::query()->firstWhere([
+                        'element_id' => $element->primary_category_id,
+                        'element_type' => Collection::class,
+                    ])->slug,
+                    'image' => $url['image'],
+                    'updated_at' => $url['updated_at'],
+                ] : [
+                    'slug' => $element->id.'-'.$url['slug'],
+                    'updated_at' => $url['updated_at'],
+                ];
+            })
+            ->unique('slug')
+            ->values();
+    }
+
+    protected function getProductPrimaryImage(Product $product)
+    {
+        return $product->thumbnail->getUrl();
     }
 }
