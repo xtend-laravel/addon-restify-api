@@ -23,6 +23,7 @@ class SitemapGetter extends Getter
                 'language_code' => $url->language->code,
                 'element_type' => $url->element_type,
                 'images' => $url->element_type === Product::class ? $this->getProductImages($url->element) : null,
+                'updated_at' => $url->updated_at,
             ])
             ->groupBy('element_type');
 
