@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Lunar\Models\Price;
 use Xtend\Extensions\Lunar\Core\Models\Product;
 use Xtend\Extensions\Lunar\Core\Models\ProductVariant;
-use XtendLunar\Addons\PageBuilder\Models\WidgetSlot;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\GetProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\NotifyWhenAvailable;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar;
@@ -94,6 +93,7 @@ class ProductRepository extends Repository
             Lunar\ProductPricesGetter::new()->onlyOnShow(),
             Lunar\ProductVariantsGetter::new()->onlyOnShow(),
             Lunar\ProductFeaturesGetter::new()->onlyOnShow(),
+            Lunar\SitemapGetter::new()->onlyOnIndex(),
             //Lunar\ProductRelatedItemsGetter::new()->onlyOnShow(),
         ];
     }
