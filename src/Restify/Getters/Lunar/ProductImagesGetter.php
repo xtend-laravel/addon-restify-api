@@ -22,6 +22,12 @@ class ProductImagesGetter extends Getter
         $product = Product::findOrFail($productId);
 
         return response()->json([
+            'variantImages' => $product?->variants->mapWithKeys(function ($variant) {
+                $variantKey = $variant->id.'-'.($variant->primary ? 'primary_variant' : 'variant');
+                return [
+                    $variantKey => $variant->images->map(fn($image) => $image->getUrl('large')),
+                ];
+            })->filter(fn($images) => $images->isNotEmpty()),
             'thumbnail' => $product?->thumbnail?->getUrl('medium') ?? null,
             'gallery' => $product?->images->map(fn ($image) => $image->getUrl('large')),
         ]);
