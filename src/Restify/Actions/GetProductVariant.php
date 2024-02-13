@@ -42,14 +42,14 @@ class GetProductVariant extends Action
             ->having(DB::raw("count(distinct ov.id)"), count($valueIds))
             ->firstOrFail();
 
-        $images = $variant->images->map(fn($image) => $image?->getUrl('large'));
+        //$images = $variant->images->map(fn($image) => $image?->getUrl('large'));
 
         return response()->json([
             'data' => [
                 'id'     => $variant->id,
                 'stock'  => $variant->stock,
                 'sku'    => $variant->sku,
-                'images' => !blank($images) ? $images : [$variant->getThumbnail()?->getUrl('large')],
+                //'images' => !blank($images) ? $images : [$variant->getThumbnail()?->getUrl('large')],
                 'price'  => $variant->basePrices()->first()?->price->value,
                 'availableColorIds' => $this->getAvailableColorIds($product),
                 'availableVariants' => $this->getAvailableVariantIds($product, $options, $selectedOptionType),
