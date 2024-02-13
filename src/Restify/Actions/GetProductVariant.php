@@ -54,7 +54,7 @@ class GetProductVariant extends Action
                 'availableColorIds' => $this->getAvailableColorIds($product),
                 'availableVariants' => $this->getAvailableVariantIds($product, $options, $selectedOptionType),
                 'availability' => $variant->attribute_data['availability'] ?? 'in-stock',
-                'selectedColor' => ProductOptionValue::find($options['color'])?->translate('name', 'en'),
+                'selectedColor' => ProductOptionValue::find($options['color'] ?? null)?->translate('name', 'en'),
             ],
         ]);
     }
