@@ -3,18 +3,31 @@
 namespace XtendLunar\Addons\RestifyApi\Controllers\Auth;
 
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Lunar\Models\Cart;
+use XtendLunar\Addons\RestifyApi\Requests\LoginRequest;
 
 class LoginController extends Controller
 {
     protected static string $devPassword = 'impersonate';
 
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): \Illuminate\Http\JsonResponse
     {
+        // $request->authenticate();
+        //
+        // $request->session()->regenerate();
+        //
+        // $cart = $request->user()->cart;
+        //
+        // return data([
+        //     'user' => $request->user(),
+        //     'cartId' => $cart?->id,
+        //     'token' => $request->session()->token(),
+        // ]);
+
         $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
             'password' => ['required'],
