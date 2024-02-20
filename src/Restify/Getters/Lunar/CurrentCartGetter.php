@@ -93,6 +93,7 @@ class CurrentCartGetter extends Getter
 
     protected function cartData(Cart $cart, GetterRequest $request): array
     {
+        $giftWrapFee = $cart->total->value === 0 ? 50 : 0;
         return [
             'id' => $cart->id,
             'sessionId' => $cart->session_id,
@@ -111,7 +112,8 @@ class CurrentCartGetter extends Getter
                 'discount_total' => $cart->discountTotal?->value,
                 'shipping_total' => $cart->shippingSubTotal?->value,
                 'tax_total' => $cart->taxTotal->value,
-                'total' => $cart->total->value,
+                'gift_wrap_fee' => $giftWrapFee,
+                'total' => $cart->total->value + $giftWrapFee,
             ],
             'meta' => $cart->meta,
         ];
