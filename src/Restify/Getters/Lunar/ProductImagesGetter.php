@@ -23,7 +23,7 @@ class ProductImagesGetter extends Getter
 
         return response()->json([
             'variantImages' => $product?->variants->mapWithKeys(function ($variant) {
-                $variantKey = $variant->id.'-'.($variant->primary ? 'primary_variant' : 'variant');
+                $variantKey = $variant->id.'-'.($variant->primary ? 'variant' : 'variant');
                 return [
                     $variantKey => $variant->images->map(fn($image) => $image->getUrl('large')),
                 ];
