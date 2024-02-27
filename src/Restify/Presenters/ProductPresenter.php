@@ -48,6 +48,7 @@ class ProductPresenter extends PresenterResource implements Presentable
                 })?->slug,
             ]),
             'sku' => $this->data['sku'] ?? '--',
+            'colors' => $this->getter($request, 'product-variants')['options']['color'] ?? [],
         ];
     }
 
