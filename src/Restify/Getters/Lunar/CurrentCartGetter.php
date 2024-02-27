@@ -27,11 +27,11 @@ class CurrentCartGetter extends Getter
 
         $cart->refresh()->calculate();
 
-        $discount = $cart->discounts->first(
-            fn (AmountOff $discount) => $discount->discount->coupon === $request->discountCode,
+        $discount100 = $cart->discounts->first(
+            fn (AmountOff $discount) => $discount->discount->data['percentage'] === 100,
         )?->discount;
 
-        if ($discount && $discount->data['percentage'] === 100 && $this->exceedsMoreThanOneItem($cart)) {
+        if ($discount100 && $this->exceedsMoreThanOneItem($cart)) {
             $cart->update(['coupon_code' => null]);
             $cart->refresh()->calculate();
         }
