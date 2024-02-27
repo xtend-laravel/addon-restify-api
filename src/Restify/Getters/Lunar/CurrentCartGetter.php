@@ -7,6 +7,7 @@ use Binaryk\LaravelRestify\Http\Requests\GetterRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Lunar\DiscountTypes\AmountOff;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\Channel;
@@ -25,6 +26,15 @@ class CurrentCartGetter extends Getter
             : $this->getCartBySession($request);
 
         $cart->refresh()->calculate();
+
+        $discount = $cart->discounts->first(
+            fn (AmountOff $discount) => $discount->discount->coupon === $request->discountCode,
+        )?->discount;
+
+        if ($discount && $discount->data['percentage'] === 100 && $this->exceedsMoreThanOneItem($cart)) {
+            $cart->update(['coupon_code' => null]);
+            $cart->refresh()->calculate();
+        }
 
         if ($cart->hasCompletedOrders()) {
             $cart = $this->createNewCartFromExistingSession($cart, $request)->refresh()->calculate();
@@ -117,5 +127,10 @@ class CurrentCartGetter extends Getter
             ],
             'meta' => $cart->meta,
         ];
+    }
+
+    protected function exceedsMoreThanOneItem(Cart $cart): bool
+    {
+        return $cart->lines->sum('quantity') > 1;
     }
 }

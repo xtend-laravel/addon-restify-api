@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Lunar\Base\Purchasable;
+use Lunar\DiscountTypes\AmountOff;
 use Lunar\Models\Cart;
 use Lunar\Models\CartLine;
 use Lunar\Models\ProductVariant;
@@ -43,6 +44,15 @@ class AddToCartAction extends Action
         //     'request' => $request->toArray(),
         // ]);
 
+        $discount = $cart->discounts->first(
+            fn (AmountOff $discount) => $discount->discount->coupon === $request->discountCode,
+        )?->discount;
+
+        if ($discount && $discount->data['percentage'] === 100 && $this->exceedsMoreThanOneItem($cart)) {
+            $cart->update(['coupon_code' => null]);
+            $cart->refresh()->calculate();
+        }
+
         // @todo return any validation stock errors or any other errors when adding lines to cart
         return data($cart->lines->groupBy('purchasable_id')->get($purchasable->id)->flatMap(
             function (CartLine $line) use ($cart, $request) {
@@ -75,5 +85,10 @@ class AddToCartAction extends Action
             ->first(
                 fn (ProductVariant $variant) => $variant->values->pluck('id')->diff(array_values($product['variants']))->isEmpty()
             );
+    }
+
+    protected function exceedsMoreThanOneItem(Cart $cart): bool
+    {
+        return $cart->lines->sum('quantity') > 1;
     }
 }
