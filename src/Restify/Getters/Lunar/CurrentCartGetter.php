@@ -28,7 +28,7 @@ class CurrentCartGetter extends Getter
         $cart->refresh()->calculate();
 
         $discount100 = $cart->discounts->first(
-            fn (AmountOff $discount) => $discount->discount->data['percentage'] === 100,
+            fn (AmountOff $discount) => (int)$discount->discount->data['percentage'] === 100,
         )?->discount;
 
         if ($discount100 && $this->exceedsMoreThanOneItem($cart)) {
