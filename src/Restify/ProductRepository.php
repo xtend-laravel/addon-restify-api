@@ -95,6 +95,7 @@ class ProductRepository extends Repository
             Lunar\ProductFeaturesGetter::new()->onlyOnShow(),
             Lunar\SitemapGetter::new()->onlyOnIndex(),
             //Lunar\ProductRelatedItemsGetter::new()->onlyOnShow(),
+            Lunar\ProductSearchGetter::new()->onlyOnIndex(),
         ];
     }
 
