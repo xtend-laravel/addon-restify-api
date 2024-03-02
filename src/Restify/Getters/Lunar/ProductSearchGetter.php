@@ -36,7 +36,8 @@ class ProductSearchGetter extends Getter
             ->with([
                 'collections' => fn(Builder $query) => $query->whereIn($query->qualifyColumn('id'), $styleCollections->pluck('id')),
                 'urls'        => fn(Builder $query) => $query->where('language_id', $language->id),
-                'thumbnail'
+                'thumbnail',
+                'primaryCategory.urls'
             ])
             ->limit(12)
             ->get();
