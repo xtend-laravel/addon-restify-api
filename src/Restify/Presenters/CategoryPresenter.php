@@ -3,6 +3,7 @@
 namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use XtendLunar\Addons\RestifyApi\Restify\Contracts\Presentable;
 
 class CategoryPresenter extends PresenterResource implements Presentable
@@ -19,6 +20,9 @@ class CategoryPresenter extends PresenterResource implements Presentable
             'description' => $this->data['attribute_data']['description'] ?? null,
             'filters' => $this->getter($request, 'filter-groups'),
             'image_url' => $collection->thumbnail?->getUrl($imageSize) ?? null,
+            'size_chart' => $collection->media->firstWhere(function (Media $media) {
+                return $media->getCustomProperty('caption') === 'SizeChart';
+            })?->getUrl(),
         ];
     }
 }

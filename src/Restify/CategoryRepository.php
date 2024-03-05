@@ -3,10 +3,10 @@
 namespace XtendLunar\Addons\RestifyApi\Restify;
 
 use Binaryk\LaravelRestify\Fields\HasMany;
+use Binaryk\LaravelRestify\Fields\MorphMany;
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Illuminate\Support\Str;
 use Xtend\Extensions\Lunar\Core\Models\Collection;
-use Xtend\Extensions\Lunar\Core\Models\ProductVariant;
 use XtendLunar\Addons\RestifyApi\Restify\Actions\GetCategoryProducts;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\CategoriesTreeGetter;
 use XtendLunar\Addons\RestifyApi\Restify\Getters\Lunar\FilterGroupsGetter;
