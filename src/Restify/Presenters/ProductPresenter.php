@@ -4,6 +4,7 @@ namespace XtendLunar\Addons\RestifyApi\Restify\Presenters;
 
 use Binaryk\LaravelRestify\Http\Requests\RestifyRequest;
 use Binaryk\LaravelRestify\Repositories\Repository as RestifyRepository;
+use Illuminate\Support\Facades\Storage;
 use Lunar\Models\Collection;
 use Lunar\Models\Language;
 use Lunar\Models\Product;
@@ -49,6 +50,7 @@ class ProductPresenter extends PresenterResource implements Presentable
             ]),
             'sku' => $this->data['sku'] ?? '--',
             'colors' => $this->getter($request, 'product-variants')['options']['color'] ?? [],
+            'seo' => $this->getSeoFields(),
         ];
     }
 
@@ -59,5 +61,14 @@ class ProductPresenter extends PresenterResource implements Presentable
             'element_id' => $this->data['product_id'] ?? $this->data['id'],
             'element_type' => Product::class,
         ])->slug ?? '--';
+    }
+
+    protected function getSeoFields(): array
+    {
+        return [
+            'title' => $this->repository->resource->translateAttribute('seo_title'),
+            'description' => $this->repository->resource->translateAttribute('seo_description'),
+            'image' => $this->data['seo_image'] ? Storage::disk('do')->url($this->data['seo_image']) : null,
+        ];
     }
 }
