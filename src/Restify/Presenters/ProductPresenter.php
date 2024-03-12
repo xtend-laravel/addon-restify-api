@@ -66,9 +66,8 @@ class ProductPresenter extends PresenterResource implements Presentable
     protected function getSeoFields(): array
     {
         return [
-            'title' => $this->repository->resource->translateAttribute('seo_title'),
-            'description' => $this->repository->resource->translateAttribute('seo_description'),
-            'image' => $this->data['seo_image'] ? Storage::disk('do')->url($this->data['seo_image']) : null,
+            'title' => $this->repository->resource->translateAttribute('seo_title') ?? $this->repository->resource->translateAttribute('name'),
+            'description' => $this->repository->resource->translateAttribute('seo_description') ?? $this->repository->resource->translateAttribute('description'),
         ];
     }
 }
